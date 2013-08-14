@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipWall", "ClipWall\ClipWall.csproj", "{498C30F7-F03C-4215-B41D-EAD7BCF4D757}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipWall.Tests", "ClipWall.Tests\ClipWall.Tests.csproj", "{EEC0BB15-0385-4909-8001-D70E4BB4F6D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{498C30F7-F03C-4215-B41D-EAD7BCF4D757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{498C30F7-F03C-4215-B41D-EAD7BCF4D757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{498C30F7-F03C-4215-B41D-EAD7BCF4D757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{498C30F7-F03C-4215-B41D-EAD7BCF4D757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEC0BB15-0385-4909-8001-D70E4BB4F6D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEC0BB15-0385-4909-8001-D70E4BB4F6D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEC0BB15-0385-4909-8001-D70E4BB4F6D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEC0BB15-0385-4909-8001-D70E4BB4F6D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
+﻿
 namespace ClipWall.Controllers
 {
+    using System.Web.Mvc;
+    using Services.Test;
+
     public class HomeController : Controller
     {
+        private SomethingUseTest somethingUseTest;
+        public HomeController(SomethingUseTest somethingUseTest)
+        {
+            this.somethingUseTest = somethingUseTest;
+        }
+
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+            ViewBag.Message = "Showing test name: " + this.somethingUseTest.TestName;
 
             return View();
         }

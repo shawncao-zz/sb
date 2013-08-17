@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClipWall;
+﻿using System.Web.Mvc;
 using ClipWall.Controllers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ClipWall.Tests.Controllers
 {
@@ -16,7 +11,7 @@ namespace ClipWall.Tests.Controllers
         public void Index()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(null);
 
             // Act
             ViewResult result = controller.Index() as ViewResult;

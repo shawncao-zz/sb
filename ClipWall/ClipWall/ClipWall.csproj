@@ -203,6 +203,9 @@
     <Compile Include="Services\Test\TestImplementation.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\clip\clip.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -269,6 +272,11 @@
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <TypeScriptCompile Include="Scripts\run.ts" />
+    <TypeScriptCompile Include="Scripts\clip\clip.ts" />
+    <Content Include="Images\glyphicons-halflings-white.png" />
+    <Content Include="Images\glyphicons-halflings.png" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
@@ -283,6 +291,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-2.3.0.debug.js" />
     <Content Include="Scripts\knockout-2.3.0.js" />
+    <TypeScriptCompile Include="Scripts\lib\page.ts" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <TypeScriptCompile Include="Scripts\system\app.ts" />
     <TypeScriptCompile Include="Scripts\lib\utils.ts" />

@@ -24,7 +24,7 @@ namespace ClipWall.Tests.Controllers
         public void About()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(null);
 
             // Act
             ViewResult result = controller.About() as ViewResult;
@@ -37,7 +37,7 @@ namespace ClipWall.Tests.Controllers
         public void Contact()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(null);
 
             // Act
             ViewResult result = controller.Contact() as ViewResult;

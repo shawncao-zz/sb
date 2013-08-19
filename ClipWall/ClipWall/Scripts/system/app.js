@@ -34,7 +34,7 @@ define(["require", "exports", "lib/utils"], function(require, exports, __test__)
         function start() {
             // Local variables
             var p = new Utils.Point(3, 4);
-            alert(p.name + ":" + p.getDist());
+            // alert(p.name + ":" + p.getDist());
         }
         Utils.start = start;
     })(exports.Utils || (exports.Utils = {}));

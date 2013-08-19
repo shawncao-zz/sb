@@ -28,6 +28,6 @@ export module Utils {
     export function start() {
         // Local variables
         var p: IPoint = new Utils.Point(3, 4);
-        alert(p.name + ":" + p.getDist());
+        // alert(p.name + ":" + p.getDist());
     }
 }

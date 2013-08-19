@@ -1,9 +1,14 @@
-﻿*
-{
-    border: 1px solid #fff;
+/* line 2, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+* {
+  border: 1px solid #fff;
 }
 
-.trigger
-{
-    background: lightgreen;
+/* line 7, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+.trigger {
+  background: lightgreen;
+}
+
+/* line 11, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+.test {
+  color: blanchedalmond;
 }

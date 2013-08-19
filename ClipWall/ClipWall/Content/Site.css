@@ -1,756 +1,875 @@
-﻿html {
-    background-color: #e2e2e2;
-    margin: 0;
-    padding: 0;
+@charset "UTF-8";
+/* line 3, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+html {
+  background-color: #e2e2e2;
+  margin: 0;
+  padding: 0;
 }
 
+/* line 9, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 body {
-    background-color: #fff;
-    border-top: solid 10px #000;
-    color: #333;
-    font-size: .85em;
-    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
-    margin: 0;
-    padding: 0;
+  background-color: #fff;
+  border-top: solid 10px #000;
+  color: #333;
+  font-size: .85em;
+  font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+  margin: 0;
+  padding: 0;
 }
 
+/* line 19, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 a {
-    color: #333;
-    outline: none;
-    padding-left: 3px;
-    padding-right: 3px;
-    text-decoration: underline;
+  color: #333333;
+  outline: none;
+  padding-left: 3px;
+  padding-right: 3px;
+  text-decoration: underline;
+}
+/* line 25, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+a:link, a:visited, a:active, a:hover {
+  color: #333333;
+}
+/* line 28, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+a:hover {
+  background-color: #c7d1d6;
 }
 
-    a:link, a:visited,
-    a:active, a:hover {
-        color: #333;
-    }
-
-    a:hover {
-        background-color: #c7d1d6;
-    }
-
+/* line 36, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 header, footer, hgroup,
 nav, section {
-    display: block;
+  display: block;
 }
 
+/* line 40, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 mark {
-    background-color: #a6dbed;
-    padding-left: 5px;
-    padding-right: 5px;
+  background-color: #a6dbed;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
+/* line 46, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .float-left {
-    float: left;
+  float: left;
 }
 
+/* line 50, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .float-right {
-    float: right;
+  float: right;
 }
 
+/* line 54, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .clear-fix:after {
-    content: ".";
-    clear: both;
-    display: block;
-    height: 0;
-    visibility: hidden;
+  content: ".";
+  clear: both;
+  display: block;
+  height: 0;
+  visibility: hidden;
 }
 
+/* line 69, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 h1, h2, h3,
 h4, h5, h6 {
-    color: #000;
-    margin-bottom: 0;
-    padding-bottom: 0;
+  color: #000;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
+/* line 73, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 h1 {
-    font-size: 2em;
+  font-size: 2em;
 }
 
+/* line 77, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 h2 {
-    font-size: 1.75em;
+  font-size: 1.75em;
 }
 
+/* line 81, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 h3 {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
+/* line 85, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 h4 {
-    font-size: 1.1em;
+  font-size: 1.1em;
 }
 
+/* line 89, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 h5, h6 {
-    font-size: 1em;
+  font-size: 1em;
 }
 
-    h5 a:link, h5 a:visited, h5 a:active {
-        padding: 0;
-        text-decoration: none;
-    }
-
+/* line 93, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+h5 a:link, h5 a:visited, h5 a:active {
+  padding: 0;
+  text-decoration: none;
+}
 
 /* main layout
 ----------------------------------------------------------*/
+/* line 101, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .content-wrapper {
-    margin: 0 auto;
-    max-width: 960px;
+  margin: 0 auto;
+  max-width: 960px;
 }
 
+/* line 106, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 #body {
-    background-color: #efeeef;
-    clear: both;
-    padding-bottom: 35px;
+  background-color: #efeeef;
+  clear: both;
+  padding-bottom: 35px;
 }
 
-    .main-content {
-        background: url("../Images/accent.png") no-repeat;
-        padding-left: 10px;
-        padding-top: 30px;
-    }
+/* line 112, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+.main-content {
+  background: url("../Images/accent.png") no-repeat;
+  padding-left: 10px;
+  padding-top: 30px;
+}
 
-    .featured + .main-content {
-        background: url("../Images/heroAccent.png") no-repeat;
-    }
+/* line 118, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+.featured + .main-content {
+  background: url("../Images/heroAccent.png") no-repeat;
+}
 
+/* line 122, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 header .content-wrapper {
-    padding-top: 20px; 
+  padding-top: 20px;
 }
 
+/* line 126, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 footer {
-    clear: both;
-    background-color: #e2e2e2;
-    font-size: .8em;
-    height: 100px;
+  clear: both;
+  background-color: #e2e2e2;
+  font-size: .8em;
+  height: 100px;
 }
-
 
 /* site title
 ----------------------------------------------------------*/
+/* line 136, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .site-title {
-    color: #c8c8c8;
-    font-family: Rockwell, Consolas, "Courier New", Courier, monospace;
-    font-size: 2.3em;
-    margin: 0;
+  color: #c8c8c8;
+  font-family: Rockwell, Consolas, "Courier New", Courier, monospace;
+  font-size: 2.3em;
+  margin: 0;
 }
 
+/* line 143, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .site-title a, .site-title a:hover, .site-title a:active {
-    background: none;
-    color: #c8c8c8;
-    outline: none;
-    text-decoration: none;
+  background: none;
+  color: #c8c8c8;
+  outline: none;
+  text-decoration: none;
 }
-
 
 /* login
 ----------------------------------------------------------*/
+/* line 153, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 #login {
-    display: block;
-    font-size: .85em;
-    margin: 0 0 10px;
-    text-align: right;
+  display: block;
+  font-size: .85em;
+  margin: 0 0 10px;
+  text-align: right;
 }
 
-    #login a {
-        background-color: #d3dce0;
-        margin-left: 10px;
-        margin-right: 3px;
-        padding: 2px 3px;
-        text-decoration: none;
-    }
+/* line 160, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#login a {
+  background-color: #d3dce0;
+  margin-left: 10px;
+  margin-right: 3px;
+  padding: 2px 3px;
+  text-decoration: none;
+}
 
-    #login a.username {
-        background: none;
-        margin: 0;
-        padding: 0;
-        text-decoration: underline;
-    }
+/* line 168, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#login a.username {
+  background: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+}
 
-    #login ul {
-        margin: 0;
-    }
+/* line 175, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#login ul {
+  margin: 0;
+}
 
-    #login li {
-        display: inline;
-        list-style: none;
-    }
-
+/* line 179, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#login li {
+  display: inline;
+  list-style: none;
+}
 
 /* menu
 ----------------------------------------------------------*/
+/* line 187, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 ul#menu {
-    font-size: 1.3em;
-    font-weight: 600;
-    margin: 0 0 5px;
-    padding: 0;
-    text-align: right;
+  font-size: 1.3em;
+  font-weight: 600;
+  margin: 0 0 5px;
+  padding: 0;
+  text-align: right;
 }
 
-    ul#menu li {
-        display: inline;
-        list-style: none;
-        padding-left: 15px;
-    }
+/* line 195, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ul#menu li {
+  display: inline;
+  list-style: none;
+  padding-left: 15px;
+}
 
-        ul#menu li a {
-            background: none;
-            color: #999;
-            text-decoration: none;
-        }
+/* line 201, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ul#menu li a {
+  background: none;
+  color: #999;
+  text-decoration: none;
+}
 
-        ul#menu li a:hover {
-            color: #333;
-            text-decoration: none;
-        }
-
+/* line 207, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ul#menu li a:hover {
+  color: #333;
+  text-decoration: none;
+}
 
 /* page elements
 ----------------------------------------------------------*/
 /* featured */
+/* line 216, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .featured {
-    background-color: #fff;
+  background-color: #fff;
 }
 
-    .featured .content-wrapper {
-        background-color: #7ac0da;
-        background-image: -ms-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
-        background-image: -o-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
-        background-image: -webkit-gradient(linear, left top, right top, color-stop(0, #7ac0da), color-stop(1, #a4d4e6));
-        background-image: -webkit-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
-        background-image: linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
-        color: #3e5667;
-        padding: 20px 40px 30px 40px;
-    }
+/* line 220, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+.featured .content-wrapper {
+  background-color: #7ac0da;
+  background-image: -ms-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
+  background-image: -o-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(0, #7ac0da), color-stop(1, #a4d4e6));
+  background-image: -webkit-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
+  background-image: linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
+  color: #3e5667;
+  padding: 20px 40px 30px 40px;
+}
 
-        .featured hgroup.title h1, .featured hgroup.title h2 {
-            color: #fff;
-        }
+/* line 231, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+.featured hgroup.title h1, .featured hgroup.title h2 {
+  color: #fff;
+}
 
-        .featured p {
-            font-size: 1.1em;
-        }
+/* line 235, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+.featured p {
+  font-size: 1.1em;
+}
 
 /* page titles */
+/* line 240, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 hgroup.title {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
+/* line 244, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 hgroup.title h1, hgroup.title h2 {
-    display: inline;
+  display: inline;
 }
 
+/* line 248, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 hgroup.title h2 {
-    font-weight: normal;
-    margin-left: 3px;
+  font-weight: normal;
+  margin-left: 3px;
 }
 
 /* features */
+/* line 254, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 section.feature {
-    width: 300px;
-    float: left;
-    padding: 10px;
+  width: 300px;
+  float: left;
+  padding: 10px;
 }
 
 /* ordered list */
+/* line 261, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 ol.round {
-    list-style-type: none;
-    padding-left: 0;
+  list-style-type: none;
+  padding-left: 0;
 }
 
-    ol.round li {
-        margin: 25px 0;
-        padding-left: 45px;
-    }
+/* line 266, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li {
+  margin: 25px 0;
+  padding-left: 45px;
+}
 
-        ol.round li.zero {
-            background: url("../Images/orderedList0.png") no-repeat;
-        }
+/* line 271, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.zero {
+  background: url("../Images/orderedList0.png") no-repeat;
+}
 
-        ol.round li.one {
-            background: url("../Images/orderedList1.png") no-repeat;
-        }
+/* line 275, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.one {
+  background: url("../Images/orderedList1.png") no-repeat;
+}
 
-        ol.round li.two {
-            background: url("../Images/orderedList2.png") no-repeat;
-        }
+/* line 279, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.two {
+  background: url("../Images/orderedList2.png") no-repeat;
+}
 
-        ol.round li.three {
-            background: url("../Images/orderedList3.png") no-repeat;
-        }
+/* line 283, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.three {
+  background: url("../Images/orderedList3.png") no-repeat;
+}
 
-        ol.round li.four {
-            background: url("../Images/orderedList4.png") no-repeat;
-        }
+/* line 287, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.four {
+  background: url("../Images/orderedList4.png") no-repeat;
+}
 
-        ol.round li.five {
-            background: url("../Images/orderedList5.png") no-repeat;
-        }
+/* line 291, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.five {
+  background: url("../Images/orderedList5.png") no-repeat;
+}
 
-        ol.round li.six {
-            background: url("../Images/orderedList6.png") no-repeat;
-        }
+/* line 295, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.six {
+  background: url("../Images/orderedList6.png") no-repeat;
+}
 
-        ol.round li.seven {
-            background: url("../Images/orderedList7.png") no-repeat;
-        }
+/* line 299, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.seven {
+  background: url("../Images/orderedList7.png") no-repeat;
+}
 
-        ol.round li.eight {
-            background: url("../Images/orderedList8.png") no-repeat;
-        }
+/* line 303, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.eight {
+  background: url("../Images/orderedList8.png") no-repeat;
+}
 
-        ol.round li.nine {
-            background: url("../Images/orderedList9.png") no-repeat;
-        }
+/* line 307, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+ol.round li.nine {
+  background: url("../Images/orderedList9.png") no-repeat;
+}
 
 /* content */
+/* line 312, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 article {
-    float: left;
-    width: 70%;
+  float: left;
+  width: 70%;
 }
 
+/* line 317, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 aside {
-    float: right;
-    width: 25%;
+  float: right;
+  width: 25%;
 }
 
-    aside ul {
-        list-style: none;
-        padding: 0;
-    }
+/* line 322, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+aside ul {
+  list-style: none;
+  padding: 0;
+}
 
-        aside ul li {
-            background: url("../Images/bullet.png") no-repeat 0 50%;
-            padding: 2px 0 2px 20px;
-        }
+/* line 327, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+aside ul li {
+  background: url("../Images/bullet.png") no-repeat 0 50%;
+  padding: 2px 0 2px 20px;
+}
 
+/* line 332, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .label {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 /* login page */
+/* line 337, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 #loginForm {
-    border-right: solid 2px #c8c8c8;
-    float: left;
-    width: 55%;
+  border-right: solid 2px #c8c8c8;
+  float: left;
+  width: 55%;
 }
 
-    #loginForm .validation-error {
-        display: block;
-        margin-left: 15px;
-    }
+/* line 343, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#loginForm .validation-error {
+  display: block;
+  margin-left: 15px;
+}
 
-    #loginForm .validation-summary-errors ul {
-        margin: 0;
-        padding: 0;
-    }
+/* line 348, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#loginForm .validation-summary-errors ul {
+  margin: 0;
+  padding: 0;
+}
 
-    #loginForm .validation-summary-errors li {
-        display: inline;
-        list-style: none;
-        margin: 0;
-    }
+/* line 353, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#loginForm .validation-summary-errors li {
+  display: inline;
+  list-style: none;
+  margin: 0;
+}
 
-    #loginForm input {
-        width: 250px;
-    }
+/* line 359, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#loginForm input {
+  width: 250px;
+}
 
-    #loginForm input[type="checkbox"],
-    #loginForm input[type="submit"],
-    #loginForm input[type="button"],
-    #loginForm button {
-        width: auto;
-    }
+/* line 366, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#loginForm input[type="checkbox"],
+#loginForm input[type="submit"],
+#loginForm input[type="button"],
+#loginForm button {
+  width: auto;
+}
 
+/* line 370, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 #socialLoginForm {
-    margin-left: 40px;
-    float: left;
-    width: 40%;
+  margin-left: 40px;
+  float: left;
+  width: 40%;
 }
 
-    #socialLoginForm h2 {
-        margin-bottom:  5px;
-    }
+/* line 376, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+#socialLoginForm h2 {
+  margin-bottom: 5px;
+}
 
+/* line 380, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 #socialLoginList button {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
+/* line 384, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 #logoutForm {
-    display: inline;
+  display: inline;
 }
 
 /* contact */
+/* line 389, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .contact h3 {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
+/* line 393, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .contact p {
-    margin: 5px 0 0 10px;
+  margin: 5px 0 0 10px;
 }
 
+/* line 397, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .contact iframe {
-    border: 1px solid #333;
-    margin: 5px 0 0 10px;
+  border: 1px solid #333;
+  margin: 5px 0 0 10px;
 }
 
 /* forms */
+/* line 403, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 fieldset {
-    border: none;
-    margin: 0;
-    padding: 0;
+  border: none;
+  margin: 0;
+  padding: 0;
 }
 
-    fieldset legend {
-        display: none;
-    }
+/* line 409, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+fieldset legend {
+  display: none;
+}
 
-    fieldset ol {
-        padding: 0;
-        list-style: none;
-    }
+/* line 413, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+fieldset ol {
+  padding: 0;
+  list-style: none;
+}
 
-        fieldset ol li {
-            padding-bottom: 5px;
-        }
+/* line 418, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+fieldset ol li {
+  padding-bottom: 5px;
+}
 
+/* line 422, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 label {
-    display: block;
-    font-size: 1.2em;
-    font-weight: 600;
+  display: block;
+  font-size: 1.2em;
+  font-weight: 600;
 }
 
+/* line 428, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 label.checkbox {
-    display: inline;
+  display: inline;
 }
 
+/* line 432, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 input, textarea {
-    border: 1px solid #e2e2e2;
-    background: #fff;
-    color: #333;
-    font-size: 1.2em;
-    margin: 5px 0 6px 0;
-    padding: 5px;
-    width: 300px;
+  border: 1px solid #e2e2e2;
+  background: #fff;
+  color: #333;
+  font-size: 1.2em;
+  margin: 5px 0 6px 0;
+  padding: 5px;
+  width: 300px;
 }
 
+/* line 442, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 textarea {
-    font-family: inherit;
-    width: 500px;
+  font-family: inherit;
+  width: 500px;
 }
 
-    input:focus, textarea:focus {
-        border: 1px solid #7ac0da;
-    }
+/* line 447, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+input:focus, textarea:focus {
+  border: 1px solid #7ac0da;
+}
 
-    input[type="checkbox"] {
-        background: transparent;
-        border: inherit;
-        width: auto;
-    }
+/* line 451, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+input[type="checkbox"] {
+  background: transparent;
+  border: inherit;
+  width: auto;
+}
 
-    input[type="submit"],
-    input[type="button"],
-    button {
-        background-color: #d3dce0;
-        border: 1px solid #787878;
-        cursor: pointer;
-        font-size: 1.2em;
-        font-weight: 600;
-        padding: 7px;
-        margin-right: 8px;
-        width: auto;
-    }
+/* line 459, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+input[type="submit"],
+input[type="button"],
+button {
+  background-color: #d3dce0;
+  border: 1px solid #787878;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: 600;
+  padding: 7px;
+  margin-right: 8px;
+  width: auto;
+}
 
-    td input[type="submit"],
-    td input[type="button"],
-    td button {
-        font-size: 1em;
-        padding: 4px;
-        margin-right: 4px;
-    }
+/* line 472, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+td input[type="submit"],
+td input[type="button"],
+td button {
+  font-size: 1em;
+  padding: 4px;
+  margin-right: 4px;
+}
 
 /* info and errors */
+/* line 479, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .message-info {
-    border: 1px solid;
-    clear: both;
-    padding: 10px 20px;
+  border: 1px solid;
+  clear: both;
+  padding: 10px 20px;
 }
 
+/* line 485, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .message-error {
-    clear: both;
-    color: #e80c4d;
-    font-size: 1.1em;
-    font-weight: bold;
-    margin: 20px 0 10px 0;
+  clear: both;
+  color: #e80c4d;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 20px 0 10px 0;
 }
 
+/* line 493, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .message-success {
-    color: #7ac0da;
-    font-size: 1.3em;
-    font-weight: bold;
-    margin: 20px 0 10px 0;
+  color: #7ac0da;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 20px 0 10px 0;
 }
 
+/* line 500, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .error {
-    color: #e80c4d;
+  color: #e80c4d;
 }
 
 /* styles for validation helpers */
+/* line 505, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .field-validation-error {
-    color: #e80c4d;
-    font-weight: bold;
+  color: #e80c4d;
+  font-weight: bold;
 }
 
+/* line 510, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .field-validation-valid {
-    display: none;
+  display: none;
 }
 
+/* line 514, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 input.input-validation-error {
-    border: 1px solid #e80c4d;
+  border: 1px solid #e80c4d;
 }
 
+/* line 518, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 input[type="checkbox"].input-validation-error {
-    border: 0 none;
+  border: 0 none;
 }
 
+/* line 522, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .validation-summary-errors {
-    color: #e80c4d;
-    font-weight: bold;
-    font-size: 1.1em;
+  color: #e80c4d;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
+/* line 528, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 .validation-summary-valid {
-    display: none;
+  display: none;
 }
-
 
 /* tables
 ----------------------------------------------------------*/
+/* line 535, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    margin-top: 0.75em;
-    border: 0 none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
 }
 
+/* line 542, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 th {
-    font-size: 1.2em;
-    text-align: left;
-    border: none 0px;
-    padding-left: 0;
+  font-size: 1.2em;
+  text-align: left;
+  border: none 0px;
+  padding-left: 0;
 }
 
-    th a {
-        display: block;
-        position: relative;
-    }
+/* line 549, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+th a {
+  display: block;
+  position: relative;
+}
 
-    th a:link, th a:visited, th a:active, th a:hover {
-        color: #333;
-        font-weight: 600;
-        text-decoration: none;
-        padding: 0;
-    }
+/* line 554, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+th a:link, th a:visited, th a:active, th a:hover {
+  color: #333;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0;
+}
 
-    th a:hover {
-        color: #000;
-    }
+/* line 561, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+th a:hover {
+  color: #000;
+}
 
-    th.asc a, th.desc a {
-        margin-right: .75em;
-    }
+/* line 565, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+th.asc a, th.desc a {
+  margin-right: .75em;
+}
 
-    th.asc a:after, th.desc a:after {
-        display: block;
-        position: absolute;
-        right: 0em;
-        top: 0;
-        font-size: 0.75em;
-    }
+/* line 569, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+th.asc a:after, th.desc a:after {
+  display: block;
+  position: absolute;
+  right: 0em;
+  top: 0;
+  font-size: 0.75em;
+}
 
-    th.asc a:after {
-        content: '▲';
-    }
+/* line 577, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+th.asc a:after {
+  content: '▲';
+}
 
-    th.desc a:after {
-        content: '▼';
-    }
+/* line 581, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+th.desc a:after {
+  content: '▼';
+}
 
+/* line 585, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 td {
-    padding: 0.25em 2em 0.25em 0em;
-    border: 0 none;
+  padding: 0.25em 2em 0.25em 0em;
+  border: 0 none;
 }
 
+/* line 590, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
 tr.pager td {
-    padding: 0 0.25em 0 0;
+  padding: 0 0.25em 0 0;
 }
-
 
 /********************
 *   Mobile Styles   *
 ********************/
 @media only screen and (max-width: 850px) {
+  /* header
+  ----------------------------------------------------------*/
+  /* line 603, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  header .float-left,
+  header .float-right {
+    float: none;
+  }
 
-    /* header
-    ----------------------------------------------------------*/
-    header .float-left,
-    header .float-right {
-        float: none;
-    }
+  /* logo */
+  /* line 608, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  header .site-title {
+    margin: 10px;
+    text-align: center;
+  }
 
-    /* logo */
-    header .site-title {
-        margin: 10px;
-        text-align: center;
-    }
+  /* login */
+  /* line 614, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #login {
+    font-size: .85em;
+    margin: 0 0 12px;
+    text-align: center;
+  }
 
-    /* login */
-    #login {
-        font-size: .85em;
-        margin: 0 0 12px;
-        text-align: center;
-    }
+  /* line 620, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #login ul {
+    margin: 5px 0;
+    padding: 0;
+  }
 
-        #login ul {
-            margin: 5px 0;
-            padding: 0;
-        }
+  /* line 625, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #login li {
+    display: inline;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-        #login li {
-            display: inline;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
+  /* line 632, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #login a {
+    background: none;
+    color: #999;
+    font-weight: 600;
+    margin: 2px;
+    padding: 0;
+  }
 
-        #login a {
-            background: none;
-            color: #999;
-            font-weight: 600;
-            margin: 2px;
-            padding: 0;
-        }
+  /* line 640, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #login a:hover {
+    color: #333;
+  }
 
-        #login a:hover {
-            color: #333;
-        }
+  /* menu */
+  /* line 645, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  nav {
+    margin-bottom: 5px;
+  }
 
-    /* menu */
-    nav {
-        margin-bottom: 5px;
-    }
+  /* line 649, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  ul#menu {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
 
-    ul#menu {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
+  /* line 655, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  ul#menu li {
+    margin: 0;
+    padding: 0;
+  }
 
-        ul#menu li {
-            margin: 0;
-            padding: 0;
-        }
+  /* main layout
+  ----------------------------------------------------------*/
+  /* line 664, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  .main-content,
+  .featured + .main-content {
+    background-position: 10px 0;
+  }
 
+  /* line 668, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  .content-wrapper {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
 
-    /* main layout
-    ----------------------------------------------------------*/
-    .main-content,
-    .featured + .main-content {
-        background-position: 10px 0;
-    }
+  /* line 673, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  .featured .content-wrapper {
+    padding: 10px;
+  }
 
-    .content-wrapper {
-        padding-right: 10px;
-        padding-left: 10px;
-    }
+  /* page content */
+  /* line 678, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  article, aside {
+    float: none;
+    width: 100%;
+  }
 
-    .featured .content-wrapper {
-        padding: 10px;
-    }
+  /* ordered list */
+  /* line 684, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  ol.round {
+    list-style-type: none;
+    padding-left: 0;
+  }
 
-    /* page content */
-    article, aside {
-        float: none;
-        width: 100%;
-    }
+  /* line 689, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  ol.round li {
+    padding-left: 10px;
+    margin: 25px 0;
+  }
 
-    /* ordered list */
-    ol.round {
-        list-style-type: none;
-        padding-left: 0;
-    }
+  /* line 703, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  ol.round li.zero,
+  ol.round li.one,
+  ol.round li.two,
+  ol.round li.three,
+  ol.round li.four,
+  ol.round li.five,
+  ol.round li.six,
+  ol.round li.seven,
+  ol.round li.eight,
+  ol.round li.nine {
+    background: none;
+  }
 
-        ol.round li {
-            padding-left: 10px;
-            margin: 25px 0;
-        }
+  /* features */
+  /* line 708, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  section.feature {
+    float: none;
+    padding: 10px;
+    width: auto;
+  }
 
-            ol.round li.zero,
-            ol.round li.one,
-            ol.round li.two,
-            ol.round li.three,
-            ol.round li.four,
-            ol.round li.five,
-            ol.round li.six,
-            ol.round li.seven,
-            ol.round li.eight,
-            ol.round li.nine {
-                background: none;
-            }
+  /* line 714, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  section.feature img {
+    color: #999;
+    content: attr(alt);
+    font-size: 1.5em;
+    font-weight: 600;
+  }
 
-     /* features */
-     section.feature {
-        float: none;
-        padding: 10px;
-        width: auto;
-     }
+  /* forms */
+  /* line 722, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  input {
+    width: 90%;
+  }
 
-        section.feature img {
-            color: #999;
-            content: attr(alt);
-            font-size: 1.5em;
-            font-weight: 600;
-        }
+  /* login page */
+  /* line 727, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #loginForm {
+    border-right: none;
+    float: none;
+    width: auto;
+  }
 
-    /* forms */
-    input {
-        width: 90%;
-    }
+  /* line 733, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #loginForm .validation-error {
+    display: block;
+    margin-left: 15px;
+  }
 
-    /* login page */
-    #loginForm {
-        border-right: none;
-        float: none;
-        width: auto;
-    }
+  /* line 738, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  #socialLoginForm {
+    margin-left: 0;
+    float: none;
+    width: auto;
+  }
 
-        #loginForm .validation-error {
-            display: block;
-            margin-left: 15px;
-        }
+  /* footer
+  ----------------------------------------------------------*/
+  /* line 748, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  footer .float-left,
+  footer .float-right {
+    float: none;
+  }
 
-    #socialLoginForm {
-        margin-left: 0;
-        float: none;
-        width: auto;
-    }
+  /* line 752, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  footer {
+    text-align: center;
+    height: auto;
+    padding: 10px 0;
+  }
 
-
-    /* footer
-    ----------------------------------------------------------*/
-    footer .float-left,
-    footer .float-right {
-        float: none;
-    }
-
-    footer {
-        text-align: center;
-        height: auto;
-        padding: 10px 0;
-    }
-
-        footer p {
-            margin: 0;
-        }
+  /* line 758, D:/ClipWall/sb/ClipWall/ClipWall/Content/Site.scss */
+  footer p {
+    margin: 0;
+  }
 }

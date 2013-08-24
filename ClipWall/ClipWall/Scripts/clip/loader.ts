@@ -1,25 +1,17 @@
-// Interface
-interface IPoint {
-    getDist(): number;
-}
+/// <reference path="../lib/page.ts" />
+import test = require("lib/page");
+var lastelem;
 
-// Module
-module Shapes {
 
-    // Class
-    export class Point implements IPoint {
-        // Constructor
-        constructor (public x: number, public y: number) { }
+document.onmouseover = function (e) {
+    var event = e || window.event;
 
-        // Instance member
-        getDist() { return Math.sqrt(this.x * this.x + this.y * this.y); }
-
-        // Static member
-        static origin = new Point(0, 0);
+    if (lastelem) {
+        lastelem.style.border = "1px solid #fff";
     }
 
-}
-
-// Local variables
-var p: IPoint = new Shapes.Point(3, 4);
-var dist = p.getDist();
+    var target = event.target || event.srcElement;
+    // document.getElementById('display').innerHTML = target.previousSibling.tagName + " | " + target.tagName + " | " + (target.nextSibling ? target.nextSibling.tagName : "X");
+    target.style.border = "1px solid";
+    lastelem = target;
+};

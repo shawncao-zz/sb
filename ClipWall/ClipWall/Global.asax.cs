@@ -8,6 +8,7 @@
 
 namespace ClipWall
 {
+    using System;
     using System.Web.Http;
     using System.Web.Mvc;
     using System.Web.Optimization;
@@ -27,6 +28,14 @@ namespace ClipWall
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
+        }
+
+        void Application_BeginRequest(object sender, EventArgs e)
+        {
+            if (Request.Url.PathAndQuery == "/loader")
+            {
+                Context.RewritePath("~/scripts/clip/loader.js");
+            }
         }
     }
 }

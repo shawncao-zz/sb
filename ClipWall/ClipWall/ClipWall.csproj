@@ -272,12 +272,15 @@
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <TypeScriptCompile Include="Scripts\run.ts" />
-    <TypeScriptCompile Include="Scripts\clip\clip.ts" />
+    <TypeScriptCompile Include="Scripts\clip\mode.drag.ts" />
     <Content Include="Images\glyphicons-halflings-white.png" />
     <Content Include="Images\glyphicons-halflings.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <TypeScriptCompile Include="Scripts\clip\loader.ts" />
+    <TypeScriptCompile Include="Scripts\clip\panel.ts" />
+    <TypeScriptCompile Include="Scripts\clip\mode.click.ts" />
+    <TypeScriptCompile Include="Scripts\clip\clip.ts" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
@@ -293,6 +296,7 @@
     <Content Include="Scripts\knockout-2.3.0.debug.js" />
     <Content Include="Scripts\knockout-2.3.0.js" />
     <TypeScriptCompile Include="Scripts\lib\page.ts" />
+    <TypeScriptCompile Include="Scripts\lib\css.ts" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <TypeScriptCompile Include="Scripts\system\app.ts" />
     <TypeScriptCompile Include="Scripts\lib\utils.ts" />
@@ -387,10 +391,7 @@
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.8\tools\Microsoft.Bcl.Build.targets" />
   <Import Project="build\typescript\TypeScript.AMD.targets" />
   <Import Project="build\sass\Sass.Compass.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target> -->
+  <PropertyGroup>
+    <PostBuildEvent>tsc --out $(ProjectDir)scripts\loader.js $(ProjectDir)scripts\clip\loader.ts</PostBuildEvent>
+  </PropertyGroup>
 </Project>

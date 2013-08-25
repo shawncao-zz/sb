@@ -1,14 +1,24 @@
 /* line 2, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
-* {
-  border: 1px solid #fff;
+.focus {
+  border: 1px solid #f00;
+  color: #0f0;
 }
 
 /* line 7, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
-.trigger {
-  background: lightgreen;
+.greyout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: grey;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  opacity: 0.6;
+  filter: 'alpha(opacity=60)';
+  pointer-events: none;
 }
 
-/* line 11, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
-.test {
-  color: blanchedalmond;
+/* line 20, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+.hidden {
+  display: none;
 }

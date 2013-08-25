@@ -1,5 +1,5 @@
-var ClipWall;
-(function (ClipWall) {
+var c;
+(function (c) {
     // define global variables
     (function (g) {
         g.d = document;
@@ -7,23 +7,9 @@ var ClipWall;
         g.ie = !!g.w["ActiveXObject"];
         g.ie6 = g.ie && !g.w["XMLHttpRequest"];
         g.st = g.w.setTimeout;
-        g.ge = function (id) {
-            return g.d.getElementById(id);
-        };
-        g.gt = function (tag) {
-            return g.d.getElementsByTagName(tag);
-        };
-        g.ce = function (tag) {
-            return g.d.createElement(tag);
-        };
-        g.at = function (elem, name, val) {
-            return elem.setAttribute(name, val);
-        };
-
-        //replace this with final domain when publish
-        g.h = "http://localhost:22128/";
-    })(ClipWall.g || (ClipWall.g = {}));
-    var g = ClipWall.g;
+        g.ge = g.d.getElementById;
+    })(c.g || (c.g = {}));
+    var g = c.g;
 
     // define events utility
     (function (e) {
@@ -95,17 +81,23 @@ var ClipWall;
             element["on" + event] = null;
         }
         e.ue = ue;
+    })(c.e || (c.e = {}));
+    var e = c.e;
+})(c || (c = {}));
+/// <reference path="../lib/page.ts" />
+var lastelem;
 
-        function trigger(element, event) {
-            if (element.dispatchEvent) {
-                var e = g.d.createEvent("HTMLEvents");
-                e.initEvent(event.type, true, false);
-                element.dispatchEvent(e);
-            } else if (element.fireEvent) {
-                element.fireEvent("on" + event.type);
-            }
-        }
-        e.trigger = trigger;
-    })(ClipWall.e || (ClipWall.e = {}));
-    var e = ClipWall.e;
-})(ClipWall || (ClipWall = {}));
+c.e.be(c.g.d, "mouseover", function (e) {
+    alert(e);
+    var event = e || c.g.w.event;
+
+    if (lastelem) {
+        lastelem.style.border = "1px solid #fff";
+    }
+
+    var target = event.target || event.srcElement;
+
+    // document.getElementById('display').innerHTML = target.previousSibling.tagName + " | " + target.tagName + " | " + (target.nextSibling ? target.nextSibling.tagName : "X");
+    target.style.border = "1px solid";
+    lastelem = target;
+});

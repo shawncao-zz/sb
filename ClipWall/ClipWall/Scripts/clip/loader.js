@@ -1,18 +1,20 @@
-define(["require", "exports"], function(require, exports) {
-    
-    var lastelem;
+/// <reference path="../lib/page.ts" />
+/// <reference path="../lib/utils.ts" />
+/// <reference path="../lib/css.ts" />
+/// <reference path="panel.ts" />
+/// <reference path="mode.click.ts" />
+var loaded;
 
-    document.onmouseover = function (e) {
-        var event = e || window.event;
+if (!loaded) {
+    loaded = true;
 
-        if (lastelem) {
-            lastelem.style.border = "1px solid #fff";
-        }
+    // load css file we need
+    ClipWall.Css.load("clip");
 
-        var target = event.target || event.srcElement;
+    // create a panel
+    ClipWall.Panel.CreatePanel();
 
-        // document.getElementById('display').innerHTML = target.previousSibling.tagName + " | " + target.tagName + " | " + (target.nextSibling ? target.nextSibling.tagName : "X");
-        target.style.border = "1px solid";
-        lastelem = target;
-    };
-});
+    // use one clip mode for testing
+    var mode = new ClipWall.ClickMode();
+    mode.apply();
+}

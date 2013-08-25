@@ -1,5 +1,3 @@
-import test = require("lib/utils");
-
 // Interface
 export interface IPoint {
     getDist(): number;
@@ -17,8 +15,7 @@ export module Utils {
         getDist() { return Math.sqrt(this.x * this.x + this.y * this.y); }
 
         get name() {
-            var t = new test.Test("Shawn");
-            return t.isValid("ab") ? "valid" : "invalid";
+            return "shawn";
         }
 
         // Static member
@@ -28,6 +25,5 @@ export module Utils {
     export function start() {
         // Local variables
         var p: IPoint = new Utils.Point(3, 4);
-        // alert(p.name + ":" + p.getDist());
     }
 }

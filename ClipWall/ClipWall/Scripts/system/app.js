@@ -1,6 +1,4 @@
-define(["require", "exports", "lib/utils"], function(require, exports, __test__) {
-    var test = __test__;
-
+define(["require", "exports"], function(require, exports) {
     ;
 
     // Module
@@ -19,8 +17,7 @@ define(["require", "exports", "lib/utils"], function(require, exports, __test__)
 
             Object.defineProperty(Point.prototype, "name", {
                 get: function () {
-                    var t = new test.Test("Shawn");
-                    return t.isValid("ab") ? "valid" : "invalid";
+                    return "shawn";
                 },
                 enumerable: true,
                 configurable: true
@@ -34,7 +31,6 @@ define(["require", "exports", "lib/utils"], function(require, exports, __test__)
         function start() {
             // Local variables
             var p = new Utils.Point(3, 4);
-            // alert(p.name + ":" + p.getDist());
         }
         Utils.start = start;
     })(exports.Utils || (exports.Utils = {}));

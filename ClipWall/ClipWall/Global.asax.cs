@@ -32,9 +32,20 @@ namespace ClipWall
 
         void Application_BeginRequest(object sender, EventArgs e)
         {
-            if (Request.Url.PathAndQuery == "/loader")
+            var path = Request.Url.PathAndQuery.ToLower();
+            switch (path)
             {
-                Context.RewritePath("~/scripts/clip/loader.js");
+                case "/ld":
+                    Context.RewritePath("~/scripts/loader.js");
+                    break;
+                case "/r":
+                    Context.RewritePath("~/scripts/require.js");
+                    break;
+                case "/clip":
+                    Context.RewritePath("~/content/clip/clip.css");
+                    break;
+                default:
+                    break;
             }
         }
     }

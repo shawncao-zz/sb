@@ -38,6 +38,37 @@ var ClipWall;
             event.preventDefault();
         }
         u.stop = stop;
+
+        function format(pattern) {
+            var ps = [];
+            for (var _i = 0; _i < (arguments.length - 1); _i++) {
+                ps[_i] = arguments[_i + 1];
+            }
+            if (!valid(ps)) {
+                return pattern;
+            }
+
+            if (empty(pattern)) {
+                return ps.join("");
+            }
+
+            for (var i = 0; i < ps.length; ++i) {
+                pattern = pattern.replace(new RegExp("\\{" + i + "\\}", "gm"), ps[i]);
+            }
+
+            return pattern;
+        }
+        u.format = format;
+
+        function empty(str) {
+            return (!valid(str) || str.length === 0);
+        }
+        u.empty = empty;
+
+        function valid(obj) {
+            return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
+        }
+        u.valid = valid;
     })(ClipWall.u || (ClipWall.u = {}));
     var u = ClipWall.u;
 })(ClipWall || (ClipWall = {}));

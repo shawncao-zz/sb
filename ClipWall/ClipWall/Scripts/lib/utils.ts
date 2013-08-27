@@ -33,5 +33,29 @@ module ClipWall {
             event.stopImmediatePropagation();
             event.preventDefault();
         }
+
+        export function format(pattern: string, ...ps: string[]): string {
+            if (!valid(ps)) {
+                return pattern;
+            }
+
+            if (empty(pattern)) {
+                return ps.join("");
+            }
+
+            for (var i = 0; i < ps.length; ++i) {
+                pattern = pattern.replace(new RegExp("\\{" + i + "\\}", "gm"), ps[i]);
+            }
+
+            return pattern;
+        }
+
+        export function empty(str: string): boolean {
+            return (!valid(str) || str.length === 0);
+        }
+
+        export function valid(obj: any): boolean {
+            return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
+        }
     }
 }

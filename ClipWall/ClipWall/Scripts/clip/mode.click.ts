@@ -1,27 +1,24 @@
 /// <reference path="clip.ts" />
+/// <reference path="point.ts" />
+/// <reference path="mode.share.ts" />
 /// <reference path="../lib/page.ts" />
 /// <reference path="../lib/utils.ts" />
+/// <reference path="../lib/coll.ts" />
 
 module ClipWall {
-    class Selection {
-        constructor(public target: HTMLElement, public overlay: HTMLElement) { }
-    };
-
     export class ClickMode implements IClipMode {
-        // pointer-events:none;
-        private greyoutPattern: string = 'position:fixed;z-index:99999;background-color:grey;border:1px solid red;opacity:0.6;filter:alpha(opacity=60);top:{0}px;left:{1}px;width:{2}px;height:{3}px';
-        private lastFocus: Selection;
-        private selections: Selection[] = [];
-        private overlays: HTMLElement[] = [];
+
+        // key is the overlay
+        private lastFocus: c.KeyValuePair<HTMLElement, HTMLElement>;
+        private selections: c.IDictionary<HTMLElement, HTMLElement> = new c.Dictionary();
+        private overlays: c.IList<HTMLElement> = new c.List();
 
         private mouseOver: (e) => any;
         private mouseClick: (e) => any;
         private scroll: () => any;
 
         private moflag: boolean = true;
-
-        private xoffset: number;
-        private yoffset: number;
+        private initOffset: Point;
 
         constructor() {
             this.mouseOver = (e) => {
@@ -30,7 +27,8 @@ module ClipWall {
                 }
 
                 this.moflag = false;
-                g.st(() => { this.moflag = true; }, 200);
+                g.st(() => { this.moflag = true; }, 300);
+
                 this.overTarget(<HTMLElement>u.evt(e).target);
                 u.stop(e);
             };
@@ -40,14 +38,15 @@ module ClipWall {
                 u.stop(e);
             };
 
+
+
             this.scroll = () => {
                 this.updateSelections();
             };
         }
 
         public apply(): void {
-            this.xoffset = g.w.pageXOffset;
-            this.yoffset = g.w.pageYOffset;
+            this.initOffset = new Point(g.w.pageXOffset, g.w.pageYOffset);
             this.hook(true);
         }
 
@@ -59,43 +58,17 @@ module ClipWall {
             var handle = bind ? e.be : e.ue;
             handle(g.b, "mouseover", this.mouseOver);
             handle(g.w, "scroll", this.scroll);
-        }
-
-        // if parameter is empty, create full screen to cover document
-        private greyout(under?: HTMLElement): HTMLElement {
-            var s = g.ce('div');
-            if (!u.valid(under)) {
-                g.at(s, 'class', 'greyout');
-            } else {
-                var rect = under.getBoundingClientRect();
-                g.at(s, 'style', u.format(
-                    this.greyoutPattern,
-                    rect.top.toString(),
-                    rect.left.toString(),
-                    rect.width.toString(),
-                    rect.height.toString()));
-            }
-
-
-            g.b.appendChild(s);
-            this.overlays.push(s);
-            e.be(s, "click", this.mouseClick);
-            return s;
-        }
-
-        private selected(elem: HTMLElement): number {
-            for (var i = 0; i < this.selections.length; i++) {
-                if (this.selections[i].target === elem || this.selections[i].overlay === elem) {
-                    return i;
-                }
-            }
-
-            return -1;
+            u.mouseselect(g.b, bind);
         }
 
         private overTarget(target: HTMLElement): void {
-            if (target == g.b
-                || this.overlays.indexOf(target) != -1
+            // keep last focus
+            if (this.lastFocus && u.contains(this.lastFocus.value, target)) {
+                return;
+            }
+
+            if (g.b.clientWidth <= (target.clientWidth + 10)
+                || g.b.clientHeight <= (target.clientHeight + 10)
                 || u.empty(target.innerText)
                 || this.onlyDivChildren(target)) {
                 this.removeLastIfNotSelected();
@@ -103,76 +76,74 @@ module ClipWall {
             }
 
             if (!u.valid(this.lastFocus)) {
-                this.lastFocus = new Selection(target, this.greyout(target));
+                this.lastFocus = new c.KeyValuePair(this.greyout(target), target);
                 return;
             }
 
-            if (target != this.lastFocus.target) {
+            if (target != this.lastFocus.value) {
                 this.removeLastIfNotSelected();
 
-                if (this.selected(target) === -1) {
-                    this.lastFocus = new Selection(target, this.greyout(target));
+                if (!this.selections.containsValue(target)) {
+                    this.lastFocus = new c.KeyValuePair(this.greyout(target), target);
                 }
             }
         }
 
-        private findchild(target: HTMLElement): number {
-            for (var i = 0; i < this.selections.length; i++) {
-                if (u.contains(target, this.selections[i].target)) {
-                    return i;
-                }
-            }
-
-            return -1;
+        private greyout(target: HTMLElement): HTMLElement {
+            var s = createOverlay(target);
+            this.overlays.add(s);
+            e.be(s, "click", this.mouseClick);
+            return s;
         }
 
         private clickOverlay(overlay: HTMLElement): void {
-            var idx = this.selected(overlay);
-            if (idx == -1) {
-                if (this.lastFocus && this.lastFocus.overlay == overlay) {
-                    var child = this.findchild(this.lastFocus.target);
-                    if (child != -1) {
-                        this.removeSelection(child);
-                    }
-
-                    this.selections.push(this.lastFocus);
+            if (!this.selections.containsKey(overlay)) {
+                if (this.lastFocus && this.lastFocus.key == overlay) {
+                    this.removeChildren(this.lastFocus.value);
+                    this.selections.add(this.lastFocus.key, this.lastFocus.value);
                 }
             } else {
-                this.removeSelection(idx);
+                this.removeSelection(overlay);
             }
         }
 
         private removeLastIfNotSelected(): void {
-            if (this.lastFocus && this.selected(this.lastFocus.target) === -1) {
-                this.removeChild(this.lastFocus.overlay);
+            if (u.valid(this.lastFocus) && !this.selections.containsKey(this.lastFocus.key)) {
+                this.removeElement(this.lastFocus.key);
+                this.lastFocus = null;
             }
         }
 
-        private removeSelection(index: number): void {
-            this.removeChild(this.selections[index].overlay);
-            this.selections.splice(index, 1);
+        private removeChildren(elem: HTMLElement): void {
+            for (var i = this.selections.count - 1; i >= 0; i--) {
+                var pair = this.selections.pair(i);
+                if (u.contains(elem, pair.value)) {
+                    this.removeSelection(pair.key);
+                }
+            }
         }
 
-        private removeChild(elem: HTMLElement): void {
-            for (var i = 0; i < this.overlays.length; i++) {
-                if (this.overlays[i] == elem) {
-                    this.overlays.splice(i, 1);
-                    g.b.removeChild(elem);
-                    return;
-                }
+        private removeSelection(elem: HTMLElement) {
+            this.selections.remove(elem);
+            this.removeElement(elem);
+        }
+
+        private removeElement(elem: HTMLElement) {
+            var idx = this.overlays.indexOf(elem);
+            if (idx !== -1) {
+                this.overlays.removeAt(idx);
+                g.b.removeChild(elem);
             }
         }
 
         private updateSelections(): void {
             this.removeLastIfNotSelected();
-            var x = pageXOffset - this.xoffset;
-            var y = pageYOffset - this.yoffset;
-            this.xoffset = pageXOffset;
-            this.yoffset = pageYOffset;
-            for (var i = 0; i < this.selections.length; i++) {
-                var elem = this.selections[i].overlay;
-                elem.style.top = (parseInt(elem.style.top) - y) + 'px';
-                elem.style.left = (parseInt(elem.style.left) - x) + 'px';
+            var newPoint = new Point(pageXOffset, pageYOffset);
+            var gap = newPoint.substract(this.initOffset);
+            this.initOffset = newPoint;
+
+            for (var i = 0; i < this.selections.count; i++) {
+                updateOverlay(this.selections.pair(i).key, -gap.x, -gap.y, 0, 0);
             }
         }
 

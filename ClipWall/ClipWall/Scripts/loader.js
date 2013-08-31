@@ -4,7 +4,7 @@ var ClipWall;
     (function (g) {
         g.d = document;
         g.w = window;
-        g.b = g.d.body || g.gt('body')[0];
+        g.b = (g.d.body || g.gt('body')[0]);
         g.ie = !!g.w["ActiveXObject"];
         g.ie6 = g.ie && !g.w["XMLHttpRequest"];
         g.st = function (handler, time) {
@@ -183,6 +183,16 @@ var ClipWall;
             return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
         }
         u.valid = valid;
+
+        function mouseselect(target, disable) {
+            if (typeof target.onselectstart != "undefined")
+                target.onselectstart = disable ? function () {
+                    return false;
+                } : null;
+else if (typeof target.style.MozUserSelect != "undefined")
+                target.style.MozUserSelect = disable ? "none" : null;
+        }
+        u.mouseselect = mouseselect;
     })(ClipWall.u || (ClipWall.u = {}));
     var u = ClipWall.u;
 })(ClipWall || (ClipWall = {}));
@@ -260,27 +270,207 @@ var ClipWall;
     })();
     ClipWall.Panel = Panel;
 })(ClipWall || (ClipWall = {}));
-/// <reference path="clip.ts" />
-/// <reference path="../lib/page.ts" />
-/// <reference path="../lib/utils.ts" />
 var ClipWall;
 (function (ClipWall) {
-    var Selection = (function () {
-        function Selection(target, overlay) {
-            this.target = target;
-            this.overlay = overlay;
+    var Point = (function () {
+        function Point(x, y) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            this.x = x;
+            this.y = y;
         }
-        return Selection;
-    })();
-    ;
+        Point.from = function (me) {
+            return new Point(me.clientX, me.clientY);
+        };
+        Point.prototype.substract = function (p) {
+            return new Point(this.x - p.x, this.y - p.y);
+        };
 
+        Point.prototype.dist = function (p) {
+            var gap = this.substract(p);
+            return Math.sqrt(gap.x * gap.x + gap.y * gap.y);
+        };
+        return Point;
+    })();
+    ClipWall.Point = Point;
+})(ClipWall || (ClipWall = {}));
+var ClipWall;
+(function (ClipWall) {
+    // pointer-events:none;
+    var greyoutPattern = 'top:{0}px;left:{1}px;width:{2}px;height:{3}px';
+
+    // if parameter is empty, create full screen to cover document
+    function createOverlay(under) {
+        var s = ClipWall.g.ce('div');
+        if (under === ClipWall.g.b) {
+            ClipWall.g.at(s, 'class', 'greyout');
+        } else {
+            var rect = { top: 0, left: 0, width: 0, height: 0 };
+            if (ClipWall.u.valid(under)) {
+                rect = under.getBoundingClientRect();
+            }
+            ClipWall.g.at(s, 'class', 'overlay');
+            ClipWall.g.at(s, 'style', ClipWall.u.format(greyoutPattern, rect.top.toString(), rect.left.toString(), rect.width.toString(), rect.height.toString()));
+            //s.innerHTML = "<p>drag to expand it...</p>";
+        }
+
+        ClipWall.g.b.appendChild(s);
+        return s;
+    }
+    ClipWall.createOverlay = createOverlay;
+
+    function updateOverlay(elem, x, y, w, h) {
+        if (y !== 0)
+            elem.style.top = (parseInt(elem.style.top) + y) + 'px';
+        if (x !== 0)
+            elem.style.left = (parseInt(elem.style.left) + x) + 'px';
+        if (w !== 0)
+            elem.style.width = (parseInt(elem.style.width) + w) + 'px';
+        if (h !== 0)
+            elem.style.height = (parseInt(elem.style.height) + h) + 'px';
+    }
+    ClipWall.updateOverlay = updateOverlay;
+})(ClipWall || (ClipWall = {}));
+// define some basic collections
+var ClipWall;
+(function (ClipWall) {
+    (function (c) {
+        var KeyValuePair = (function () {
+            function KeyValuePair(key, value) {
+                this.key = key;
+                this.value = value;
+            }
+            return KeyValuePair;
+        })();
+        c.KeyValuePair = KeyValuePair;
+
+        var List = (function () {
+            function List() {
+                this.data = [];
+            }
+            List.prototype.add = function (elem) {
+                if (ClipWall.u.valid(elem)) {
+                    this.data.push(elem);
+                }
+            };
+
+            List.prototype.remove = function (elem) {
+                var found = this.indexOf(elem);
+                if (found != -1) {
+                    this.removeAt(found);
+                }
+            };
+
+            List.prototype.removeAt = function (i) {
+                if (i >= 0 && i < this.count) {
+                    this.data.splice(i, 1);
+                }
+            };
+
+            List.prototype.item = function (i) {
+                if (i >= 0 && i < this.count) {
+                    return this.data[i];
+                }
+
+                return null;
+            };
+
+            List.prototype.indexOf = function (elem) {
+                var found = -1;
+                for (var i = 0; i < this.count; i++) {
+                    if (elem === this.data[i]) {
+                        found = i;
+                        break;
+                    }
+                }
+
+                return found;
+            };
+
+            Object.defineProperty(List.prototype, "count", {
+                get: function () {
+                    return this.data.length;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return List;
+        })();
+        c.List = List;
+
+        var Dictionary = (function () {
+            function Dictionary() {
+                this.keys = new List();
+                this.values = new List();
+            }
+            Dictionary.prototype.add = function (key, value) {
+                if (ClipWall.u.valid(key) && ClipWall.u.valid(value) && !this.containsKey(key)) {
+                    this.keys.add(key);
+                    this.values.add(value);
+                }
+            };
+
+            Dictionary.prototype.containsKey = function (key) {
+                if (ClipWall.u.valid(key)) {
+                    return this.keys.indexOf(key) != -1;
+                }
+
+                return false;
+            };
+
+            Dictionary.prototype.containsValue = function (value) {
+                if (ClipWall.u.valid(value)) {
+                    return this.values.indexOf(value) != -1;
+                }
+
+                return false;
+            };
+
+            Dictionary.prototype.remove = function (key) {
+                this.removeAt(this.keys.indexOf(key));
+            };
+
+            Dictionary.prototype.removeAt = function (index) {
+                if (index >= 0 && index < this.count) {
+                    this.keys.removeAt(index);
+                    this.values.removeAt(index);
+                }
+            };
+
+            Dictionary.prototype.pair = function (i) {
+                if (i >= 0 && i < this.count) {
+                    return new KeyValuePair(this.keys.item(i), this.values.item(i));
+                }
+
+                return null;
+            };
+
+            Object.defineProperty(Dictionary.prototype, "count", {
+                get: function () {
+                    return this.keys.count;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Dictionary;
+        })();
+        c.Dictionary = Dictionary;
+    })(ClipWall.c || (ClipWall.c = {}));
+    var c = ClipWall.c;
+})(ClipWall || (ClipWall = {}));
+/// <reference path="clip.ts" />
+/// <reference path="point.ts" />
+/// <reference path="mode.share.ts" />
+/// <reference path="../lib/page.ts" />
+/// <reference path="../lib/utils.ts" />
+/// <reference path="../lib/coll.ts" />
+var ClipWall;
+(function (ClipWall) {
     var ClickMode = (function () {
         function ClickMode() {
             var _this = this;
-            // pointer-events:none;
-            this.greyoutPattern = 'position:fixed;z-index:99999;background-color:grey;border:1px solid red;opacity:0.6;filter:alpha(opacity=60);top:{0}px;left:{1}px;width:{2}px;height:{3}px';
-            this.selections = [];
-            this.overlays = [];
+            this.selections = new ClipWall.c.Dictionary();
+            this.overlays = new ClipWall.c.List();
             this.moflag = true;
             this.mouseOver = function (e) {
                 if (!_this.moflag) {
@@ -290,7 +480,8 @@ var ClipWall;
                 _this.moflag = false;
                 ClipWall.g.st(function () {
                     _this.moflag = true;
-                }, 200);
+                }, 300);
+
                 _this.overTarget(ClipWall.u.evt(e).target);
                 ClipWall.u.stop(e);
             };
@@ -305,8 +496,7 @@ var ClipWall;
             };
         }
         ClickMode.prototype.apply = function () {
-            this.xoffset = ClipWall.g.w.pageXOffset;
-            this.yoffset = ClipWall.g.w.pageYOffset;
+            this.initOffset = new ClipWall.Point(ClipWall.g.w.pageXOffset, ClipWall.g.w.pageYOffset);
             this.hook(true);
         };
 
@@ -318,111 +508,88 @@ var ClipWall;
             var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
             handle(ClipWall.g.b, "mouseover", this.mouseOver);
             handle(ClipWall.g.w, "scroll", this.scroll);
-        };
-
-        // if parameter is empty, create full screen to cover document
-        ClickMode.prototype.greyout = function (under) {
-            var s = ClipWall.g.ce('div');
-            if (!ClipWall.u.valid(under)) {
-                ClipWall.g.at(s, 'class', 'greyout');
-            } else {
-                var rect = under.getBoundingClientRect();
-                ClipWall.g.at(s, 'style', ClipWall.u.format(this.greyoutPattern, rect.top.toString(), rect.left.toString(), rect.width.toString(), rect.height.toString()));
-            }
-
-            ClipWall.g.b.appendChild(s);
-            this.overlays.push(s);
-            ClipWall.e.be(s, "click", this.mouseClick);
-            return s;
-        };
-
-        ClickMode.prototype.selected = function (elem) {
-            for (var i = 0; i < this.selections.length; i++) {
-                if (this.selections[i].target === elem || this.selections[i].overlay === elem) {
-                    return i;
-                }
-            }
-
-            return -1;
+            ClipWall.u.mouseselect(ClipWall.g.b, bind);
         };
 
         ClickMode.prototype.overTarget = function (target) {
-            if (target == ClipWall.g.b || this.overlays.indexOf(target) != -1 || ClipWall.u.empty(target.innerText) || this.onlyDivChildren(target)) {
+            if (this.lastFocus && ClipWall.u.contains(this.lastFocus.value, target)) {
+                return;
+            }
+
+            if (ClipWall.g.b.clientWidth <= (target.clientWidth + 10) || ClipWall.g.b.clientHeight <= (target.clientHeight + 10) || ClipWall.u.empty(target.innerText) || this.onlyDivChildren(target)) {
                 this.removeLastIfNotSelected();
                 return;
             }
 
             if (!ClipWall.u.valid(this.lastFocus)) {
-                this.lastFocus = new Selection(target, this.greyout(target));
+                this.lastFocus = new ClipWall.c.KeyValuePair(this.greyout(target), target);
                 return;
             }
 
-            if (target != this.lastFocus.target) {
+            if (target != this.lastFocus.value) {
                 this.removeLastIfNotSelected();
 
-                if (this.selected(target) === -1) {
-                    this.lastFocus = new Selection(target, this.greyout(target));
+                if (!this.selections.containsValue(target)) {
+                    this.lastFocus = new ClipWall.c.KeyValuePair(this.greyout(target), target);
                 }
             }
         };
 
-        ClickMode.prototype.findchild = function (target) {
-            for (var i = 0; i < this.selections.length; i++) {
-                if (ClipWall.u.contains(target, this.selections[i].target)) {
-                    return i;
-                }
-            }
-
-            return -1;
+        ClickMode.prototype.greyout = function (target) {
+            var s = ClipWall.createOverlay(target);
+            this.overlays.add(s);
+            ClipWall.e.be(s, "click", this.mouseClick);
+            return s;
         };
 
         ClickMode.prototype.clickOverlay = function (overlay) {
-            var idx = this.selected(overlay);
-            if (idx == -1) {
-                if (this.lastFocus && this.lastFocus.overlay == overlay) {
-                    var child = this.findchild(this.lastFocus.target);
-                    if (child != -1) {
-                        this.removeSelection(child);
-                    }
-
-                    this.selections.push(this.lastFocus);
+            if (!this.selections.containsKey(overlay)) {
+                if (this.lastFocus && this.lastFocus.key == overlay) {
+                    this.removeChildren(this.lastFocus.value);
+                    this.selections.add(this.lastFocus.key, this.lastFocus.value);
                 }
             } else {
-                this.removeSelection(idx);
+                this.removeSelection(overlay);
             }
         };
 
         ClickMode.prototype.removeLastIfNotSelected = function () {
-            if (this.lastFocus && this.selected(this.lastFocus.target) === -1) {
-                this.removeChild(this.lastFocus.overlay);
+            if (ClipWall.u.valid(this.lastFocus) && !this.selections.containsKey(this.lastFocus.key)) {
+                this.removeElement(this.lastFocus.key);
+                this.lastFocus = null;
             }
         };
 
-        ClickMode.prototype.removeSelection = function (index) {
-            this.removeChild(this.selections[index].overlay);
-            this.selections.splice(index, 1);
+        ClickMode.prototype.removeChildren = function (elem) {
+            for (var i = this.selections.count - 1; i >= 0; i--) {
+                var pair = this.selections.pair(i);
+                if (ClipWall.u.contains(elem, pair.value)) {
+                    this.removeSelection(pair.key);
+                }
+            }
         };
 
-        ClickMode.prototype.removeChild = function (elem) {
-            for (var i = 0; i < this.overlays.length; i++) {
-                if (this.overlays[i] == elem) {
-                    this.overlays.splice(i, 1);
-                    ClipWall.g.b.removeChild(elem);
-                    return;
-                }
+        ClickMode.prototype.removeSelection = function (elem) {
+            this.selections.remove(elem);
+            this.removeElement(elem);
+        };
+
+        ClickMode.prototype.removeElement = function (elem) {
+            var idx = this.overlays.indexOf(elem);
+            if (idx !== -1) {
+                this.overlays.removeAt(idx);
+                ClipWall.g.b.removeChild(elem);
             }
         };
 
         ClickMode.prototype.updateSelections = function () {
             this.removeLastIfNotSelected();
-            var x = pageXOffset - this.xoffset;
-            var y = pageYOffset - this.yoffset;
-            this.xoffset = pageXOffset;
-            this.yoffset = pageYOffset;
-            for (var i = 0; i < this.selections.length; i++) {
-                var elem = this.selections[i].overlay;
-                elem.style.top = (parseInt(elem.style.top) - y) + 'px';
-                elem.style.left = (parseInt(elem.style.left) - x) + 'px';
+            var newPoint = new ClipWall.Point(pageXOffset, pageYOffset);
+            var gap = newPoint.substract(this.initOffset);
+            this.initOffset = newPoint;
+
+            for (var i = 0; i < this.selections.count; i++) {
+                ClipWall.updateOverlay(this.selections.pair(i).key, -gap.x, -gap.y, 0, 0);
             }
         };
 
@@ -447,11 +614,97 @@ var ClipWall;
     })();
     ClipWall.ClickMode = ClickMode;
 })(ClipWall || (ClipWall = {}));
+/// <reference path="mode.share.ts" />
+/// <reference path="../lib/page.ts" />
+/// <reference path="../lib/utils.ts" />
+var ClipWall;
+(function (ClipWall) {
+    var DragMode = (function () {
+        function DragMode() {
+            var _this = this;
+            this.overlays = new ClipWall.c.List();
+            this.dragFlag = 0;
+            this.dragTarget = null;
+            this.mouseDown = function (e) {
+                _this.dragTarget = ClipWall.u.evt(e).target;
+                _this.lastPosition = ClipWall.Point.from(e);
+                if (_this.dragFlag === 0) {
+                    _this.dragFlag = 1;
+                    ClipWall.u.stop(e);
+                }
+            };
+
+            this.mouseMove = function (e) {
+                if (_this.dragFlag == 0) {
+                    return;
+                }
+
+                var newP = ClipWall.Point.from(e);
+                var gap = newP.substract(_this.lastPosition);
+                if (_this.dragFlag == 1) {
+                    _this.dragFlag = 2;
+                    _this.dragTarget = ClipWall.createOverlay(null);
+                    ClipWall.updateOverlay(_this.dragTarget, _this.lastPosition.x, _this.lastPosition.y, gap.x, gap.y);
+                    console.log("x:" + gap.x + ";y:" + gap.y);
+                } else if (_this.dragTarget) {
+                    ClipWall.updateOverlay(_this.dragTarget, 0, 0, gap.x, gap.y);
+                    console.log("w:" + gap.x + ";h:" + gap.y);
+                }
+
+                _this.lastPosition = newP;
+
+                ClipWall.u.stop(e);
+            };
+
+            this.mouseUp = function (e) {
+                _this.dragFlag = 0;
+                if (_this.dragTarget) {
+                    _this.clearOverlap(_this.dragTarget.getBoundingClientRect());
+                    _this.overlays.add(_this.dragTarget);
+                    _this.dragTarget = null;
+                }
+
+                ClipWall.u.stop(e);
+            };
+        }
+        DragMode.prototype.apply = function () {
+            this.hook(true);
+        };
+
+        DragMode.prototype.dispose = function () {
+            this.hook(false);
+        };
+
+        DragMode.prototype.hook = function (bind) {
+            var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
+            handle(ClipWall.g.b, "mousedown", this.mouseDown);
+            handle(ClipWall.g.b, "mousemove", this.mouseMove);
+            handle(ClipWall.g.b, "mouseup", this.mouseUp);
+            ClipWall.u.mouseselect(ClipWall.g.b, bind);
+        };
+
+        DragMode.prototype.clearOverlap = function (rect) {
+            for (var i = this.overlays.count - 1; i >= 0; i--) {
+                if (this.overlap(rect, this.overlays.item(i).getBoundingClientRect())) {
+                    ClipWall.g.b.removeChild(this.overlays.item(i));
+                    this.overlays.removeAt(i);
+                }
+            }
+        };
+
+        DragMode.prototype.overlap = function (rect1, rect2) {
+            return true;
+        };
+        return DragMode;
+    })();
+    ClipWall.DragMode = DragMode;
+})(ClipWall || (ClipWall = {}));
 /// <reference path="../lib/page.ts" />
 /// <reference path="../lib/utils.ts" />
 /// <reference path="../lib/css.ts" />
 /// <reference path="panel.ts" />
 /// <reference path="mode.click.ts" />
+/// <reference path="mode.drag.ts" />
 var loaded;
 
 if (!loaded) {
@@ -464,6 +717,6 @@ if (!loaded) {
     ClipWall.Panel.CreatePanel();
 
     // use one clip mode for testing
-    var mode = new ClipWall.ClickMode();
+    var mode = new ClipWall.DragMode();
     mode.apply();
 }

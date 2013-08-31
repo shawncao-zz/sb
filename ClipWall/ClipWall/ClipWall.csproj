@@ -281,6 +281,9 @@
     <TypeScriptCompile Include="Scripts\clip\panel.ts" />
     <TypeScriptCompile Include="Scripts\clip\mode.click.ts" />
     <TypeScriptCompile Include="Scripts\clip\clip.ts" />
+    <TypeScriptCompile Include="Scripts\lib\coll.ts" />
+    <TypeScriptCompile Include="Scripts\clip\point.ts" />
+    <TypeScriptCompile Include="Scripts\clip\mode.share.ts" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
@@ -392,6 +395,6 @@
   <Import Project="build\typescript\TypeScript.AMD.targets" />
   <Import Project="build\sass\Sass.Compass.targets" />
   <PropertyGroup>
-    <PostBuildEvent>tsc --out $(ProjectDir)scripts\loader.js $(ProjectDir)scripts\clip\loader.ts</PostBuildEvent>
+    <PostBuildEvent>tsc --out $(ProjectDir)scripts\loader.js -target ES5 $(ProjectDir)scripts\clip\loader.ts</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -57,5 +57,14 @@ module ClipWall {
         export function valid(obj: any): boolean {
             return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
         }
+
+        export function mouseselect(target: any, disable: boolean) {
+            //For IE This code will work
+            if (typeof target.onselectstart != "undefined")
+                target.onselectstart = disable ? () => false : null;
+            //For Firefox This code will work
+            else if (typeof target.style.MozUserSelect != "undefined")
+                target.style.MozUserSelect = disable ? "none" : null;
+        }
     }
 }

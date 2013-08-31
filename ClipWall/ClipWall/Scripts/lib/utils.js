@@ -69,6 +69,16 @@ var ClipWall;
             return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
         }
         u.valid = valid;
+
+        function mouseselect(target, disable) {
+            if (typeof target.onselectstart != "undefined")
+                target.onselectstart = disable ? function () {
+                    return false;
+                } : null;
+else if (typeof target.style.MozUserSelect != "undefined")
+                target.style.MozUserSelect = disable ? "none" : null;
+        }
+        u.mouseselect = mouseselect;
     })(ClipWall.u || (ClipWall.u = {}));
     var u = ClipWall.u;
 })(ClipWall || (ClipWall = {}));

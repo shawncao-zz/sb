@@ -4,7 +4,7 @@ var ClipWall;
     (function (g) {
         g.d = document;
         g.w = window;
-        g.b = g.d.body || g.gt('body')[0];
+        g.b = (g.d.body || g.gt('body')[0]);
         g.ie = !!g.w["ActiveXObject"];
         g.ie6 = g.ie && !g.w["XMLHttpRequest"];
         g.st = function (handler, time) {

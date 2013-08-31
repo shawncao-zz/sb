@@ -7,7 +7,7 @@ module ClipWall {
     export module g {
         export var d = document;
         export var w = window;
-        export var b = d.body || gt('body')[0];
+        export var b: HTMLElement = <HTMLElement>(d.body || gt('body')[0]);
         export var ie = !!w["ActiveXObject"];
         export var ie6 = ie && !w["XMLHttpRequest"];
         export var st = (handler: () => any, time: number) => w.setTimeout(handler, time);

@@ -39,6 +39,9 @@ namespace ClipWall
 
             // using bootstrap
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/bootstrap.js"));
+
+            // using masonry
+            bundles.Add(new ScriptBundle("~/bundles/masonry").Include("~/Scripts/masonry.js"));
         }
     }
 }

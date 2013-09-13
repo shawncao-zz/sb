@@ -1,10 +1,10 @@
-/* line 2, C:/project/GitHub/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+/* line 2, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .focus {
   border: 1px solid #f00;
   color: #0f0;
 }
 
-/* line 8, C:/project/GitHub/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+/* line 8, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .greyout {
   position: fixed;
   top: 0;
@@ -18,12 +18,12 @@
   pointer-events: none;
 }
 
-/* line 22, C:/project/GitHub/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+/* line 22, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .hidden {
   display: none;
 }
 
-/* line 27, C:/project/GitHub/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+/* line 27, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .overlay {
   position: fixed;
   z-index: 99999;
@@ -35,11 +35,11 @@
   -webkit-transition-timing-function: ease-out;
   -webkit-transition-duration: 500ms;
 }
-/* line 37, C:/project/GitHub/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+/* line 37, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .overlay p {
   text-align: center;
 }
-/* line 40, C:/project/GitHub/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+/* line 40, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .overlay:hover {
   opacity: .9;
   cursor: move;

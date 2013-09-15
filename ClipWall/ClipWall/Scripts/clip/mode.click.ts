@@ -1,9 +1,9 @@
 /// <reference path="clip.ts" />
-/// <reference path="point.ts" />
 /// <reference path="mode.share.ts" />
 /// <reference path="../lib/page.ts" />
 /// <reference path="../lib/utils.ts" />
 /// <reference path="../lib/coll.ts" />
+/// <reference path="../lib/point.ts" />
 
 module ClipWall {
     export class ClickMode implements IClipMode {

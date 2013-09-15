@@ -66,7 +66,7 @@ var ClipWall;
         u.empty = empty;
 
         function valid(obj) {
-            return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
+            return (obj !== null && typeof obj !== "undefined");
         }
         u.valid = valid;
 

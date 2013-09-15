@@ -55,7 +55,7 @@ module ClipWall {
         }
 
         export function valid(obj: any): boolean {
-            return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
+            return (obj !== null &&  typeof obj !== "undefined");
         }
 
         export function mouseselect(target: any, disable: boolean) {

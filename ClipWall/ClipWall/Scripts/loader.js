@@ -180,7 +180,7 @@ var ClipWall;
         u.empty = empty;
 
         function valid(obj) {
-            return (obj !== null && obj !== undefined && typeof (obj) !== "undefined");
+            return (obj !== null && typeof obj !== "undefined");
         }
         u.valid = valid;
 
@@ -269,30 +269,6 @@ var ClipWall;
         return Panel;
     })();
     ClipWall.Panel = Panel;
-})(ClipWall || (ClipWall = {}));
-var ClipWall;
-(function (ClipWall) {
-    var Point = (function () {
-        function Point(x, y) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            this.x = x;
-            this.y = y;
-        }
-        Point.from = function (me) {
-            return new Point(me.clientX, me.clientY);
-        };
-        Point.prototype.substract = function (p) {
-            return new Point(this.x - p.x, this.y - p.y);
-        };
-
-        Point.prototype.dist = function (p) {
-            var gap = this.substract(p);
-            return Math.sqrt(gap.x * gap.x + gap.y * gap.y);
-        };
-        return Point;
-    })();
-    ClipWall.Point = Point;
 })(ClipWall || (ClipWall = {}));
 var ClipWall;
 (function (ClipWall) {
@@ -458,12 +434,36 @@ var ClipWall;
     })(ClipWall.c || (ClipWall.c = {}));
     var c = ClipWall.c;
 })(ClipWall || (ClipWall = {}));
+var ClipWall;
+(function (ClipWall) {
+    var Point = (function () {
+        function Point(x, y) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            this.x = x;
+            this.y = y;
+        }
+        Point.from = function (me) {
+            return new Point(me.clientX, me.clientY);
+        };
+        Point.prototype.substract = function (p) {
+            return new Point(this.x - p.x, this.y - p.y);
+        };
+
+        Point.prototype.dist = function (p) {
+            var gap = this.substract(p);
+            return Math.sqrt(gap.x * gap.x + gap.y * gap.y);
+        };
+        return Point;
+    })();
+    ClipWall.Point = Point;
+})(ClipWall || (ClipWall = {}));
 /// <reference path="clip.ts" />
-/// <reference path="point.ts" />
 /// <reference path="mode.share.ts" />
 /// <reference path="../lib/page.ts" />
 /// <reference path="../lib/utils.ts" />
 /// <reference path="../lib/coll.ts" />
+/// <reference path="../lib/point.ts" />
 var ClipWall;
 (function (ClipWall) {
     var ClickMode = (function () {
@@ -614,8 +614,87 @@ var ClipWall;
     })();
     ClipWall.ClickMode = ClickMode;
 })(ClipWall || (ClipWall = {}));
+/// <reference path="utils.ts" />
+var ClipWall;
+(function (ClipWall) {
+    var Selection = (function () {
+        function Selection(start, selecting, selected) {
+            var _this = this;
+            this.onstart = start;
+            this.onselecting = selecting;
+            this.onselected = selected;
+
+            this.mouseDown = function (e) {
+                _this._target = ClipWall.u.evt(e).target;
+                _this._position = ClipWall.Point.from(e);
+                if (_this._flag === 0) {
+                    _this._flag = 1;
+                    ClipWall.u.stop(e);
+                }
+
+                if (ClipWall.u.valid(_this.onstart)) {
+                    _this.onstart(_this);
+                }
+            };
+
+            this.mouseMove = function (e) {
+                if (_this._flag == 0) {
+                    return;
+                }
+
+                _this._position = ClipWall.Point.from(e);
+                if (_this._flag == 1) {
+                    _this._flag = 2;
+                }
+
+                if (ClipWall.u.valid(_this.onselecting)) {
+                    _this.onselecting(_this);
+                }
+
+                ClipWall.u.stop(e);
+            };
+
+            this.mouseUp = function (e) {
+                _this._flag = 0;
+                if (ClipWall.u.valid(_this.onselected)) {
+                    _this.onselected(_this);
+                }
+
+                _this._target = null;
+
+                ClipWall.u.stop(e);
+            };
+        }
+        Object.defineProperty(Selection.prototype, "target", {
+            get: function () {
+                return this._target;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Selection.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Selection.prototype.enable = function (bind) {
+            var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
+            handle(ClipWall.g.b, "mousedown", this.mouseDown);
+            handle(ClipWall.g.b, "mousemove", this.mouseMove);
+            handle(ClipWall.g.b, "mouseup", this.mouseUp);
+            ClipWall.u.mouseselect(ClipWall.g.b, bind);
+        };
+        return Selection;
+    })();
+    ClipWall.Selection = Selection;
+})(ClipWall || (ClipWall = {}));
 /// <reference path="mode.share.ts" />
 /// <reference path="../lib/page.ts" />
+/// <reference path="../lib/selection.ts" />
 /// <reference path="../lib/utils.ts" />
 var ClipWall;
 (function (ClipWall) {
@@ -623,64 +702,38 @@ var ClipWall;
         function DragMode() {
             var _this = this;
             this.overlays = new ClipWall.c.List();
-            this.dragFlag = 0;
-            this.dragTarget = null;
-            this.mouseDown = function (e) {
-                _this.dragTarget = ClipWall.u.evt(e).target;
-                _this.lastPosition = ClipWall.Point.from(e);
-                if (_this.dragFlag === 0) {
-                    _this.dragFlag = 1;
-                    ClipWall.u.stop(e);
-                }
-            };
-
-            this.mouseMove = function (e) {
-                if (_this.dragFlag == 0) {
+            this.selection = new ClipWall.Selection(function (selection) {
+                _this.lastPosition = selection.position;
+            }, function (selection) {
+                var newP = selection.position;
+                if (!ClipWall.u.valid(_this.lastPosition)) {
+                    _this.lastPosition = newP;
                     return;
                 }
 
-                var newP = ClipWall.Point.from(e);
                 var gap = newP.substract(_this.lastPosition);
-                if (_this.dragFlag == 1) {
-                    _this.dragFlag = 2;
+                if (!ClipWall.u.valid(_this.dragTarget)) {
                     _this.dragTarget = ClipWall.createOverlay(null);
                     ClipWall.updateOverlay(_this.dragTarget, _this.lastPosition.x, _this.lastPosition.y, gap.x, gap.y);
-                    console.log("x:" + gap.x + ";y:" + gap.y);
-                } else if (_this.dragTarget) {
+                } else {
                     ClipWall.updateOverlay(_this.dragTarget, 0, 0, gap.x, gap.y);
-                    console.log("w:" + gap.x + ";h:" + gap.y);
                 }
 
                 _this.lastPosition = newP;
-
-                ClipWall.u.stop(e);
-            };
-
-            this.mouseUp = function (e) {
-                _this.dragFlag = 0;
-                if (_this.dragTarget) {
+            }, function () {
+                if (ClipWall.u.valid(_this.dragTarget)) {
                     _this.clearOverlap(_this.dragTarget.getBoundingClientRect());
                     _this.overlays.add(_this.dragTarget);
                     _this.dragTarget = null;
                 }
-
-                ClipWall.u.stop(e);
-            };
+            });
         }
         DragMode.prototype.apply = function () {
-            this.hook(true);
+            this.selection.enable(true);
         };
 
         DragMode.prototype.dispose = function () {
-            this.hook(false);
-        };
-
-        DragMode.prototype.hook = function (bind) {
-            var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
-            handle(ClipWall.g.b, "mousedown", this.mouseDown);
-            handle(ClipWall.g.b, "mousemove", this.mouseMove);
-            handle(ClipWall.g.b, "mouseup", this.mouseUp);
-            ClipWall.u.mouseselect(ClipWall.g.b, bind);
+            this.selection.enable(false);
         };
 
         DragMode.prototype.clearOverlap = function (rect) {

@@ -274,6 +274,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <TypeScriptCompile Include="Scripts\lib\selection.ts" />
+    <TypeScriptCompile Include="Scripts\clip\mode.select.ts" />
     <Content Include="Scripts\masonry.js" />
     <Content Include="Views\Index\Index.cshtml" />
     <TypeScriptCompile Include="Scripts\run.ts" />
@@ -287,7 +289,7 @@
     <TypeScriptCompile Include="Scripts\clip\mode.click.ts" />
     <TypeScriptCompile Include="Scripts\clip\clip.ts" />
     <TypeScriptCompile Include="Scripts\lib\coll.ts" />
-    <TypeScriptCompile Include="Scripts\clip\point.ts" />
+    <TypeScriptCompile Include="Scripts\lib\point.ts" />
     <TypeScriptCompile Include="Scripts\clip\mode.share.ts" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />

@@ -274,7 +274,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <TypeScriptCompile Include="Scripts\lib\selection.ts" />
+    <TypeScriptCompile Include="Scripts\lib\scrape.ts" />
     <TypeScriptCompile Include="Scripts\clip\mode.select.ts" />
     <Content Include="Scripts\masonry.js" />
     <Content Include="Views\Index\Index.cshtml" />

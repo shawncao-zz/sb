@@ -35,10 +35,14 @@ var ClipWall;
 
         // c_evt.fire(event, arguments);
         function fire(e) {
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 1); _i++) {
+                args[_i] = arguments[_i + 1];
+            }
             var handlers = cache[e];
             if (handlers) {
                 for (var i = 0; i < handlers.length; i++) {
-                    handlers[i](arguments);
+                    handlers[i](args);
                 }
             }
         }

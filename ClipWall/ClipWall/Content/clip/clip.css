@@ -47,3 +47,18 @@
   -webkit-transition-timing-function: ease-out;
   -webkit-transition-duration: 500ms;
 }
+
+/* line 49, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+.panel {
+  position: fixed;
+  z-index: 100000;
+  left: 0;
+  margin-left: -190px;
+  width: 200px;
+  height: 300px;
+  border: 1px solid;
+}
+/* line 57, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+.panel:hover {
+  margin-left: 0;
+}

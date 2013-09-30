@@ -1,7 +1,7 @@
 /// <reference path="utils.ts" />
 
 module ClipWall {
-    export class Selection {
+    export class Scrape {
         private mouseDown: (e) => any;
         private mouseUp: (e) => any;
         private mouseMove: (e) => any;
@@ -9,14 +9,14 @@ module ClipWall {
         private _position: Point;
         private _flag: number;
 
-        private onstart: (s: Selection) => void;
-        private onselecting: (s: Selection) => void;
-        private onselected: (s: Selection) => void;
+        private onstart: (s: Scrape) => boolean;
+        private onselecting: (s: Scrape) => boolean;
+        private onselected: (s: Scrape) => boolean;
 
         constructor(
-            start: (s: Selection) => void,
-            selecting: (s: Selection) => void,
-            selected: (s: Selection) => void) {
+            start: (s: Scrape) => boolean,
+            selecting: (s: Scrape) => boolean,
+            selected: (s: Scrape) => boolean) {
 
             this.onstart = start;
             this.onselecting = selecting;
@@ -27,11 +27,12 @@ module ClipWall {
                 this._position = Point.from(<MouseEvent>e);
                 if (this._flag === 0) {
                     this._flag = 1;
-                    u.stop(e);
                 }
 
                 if (u.valid(this.onstart)) {
-                    this.onstart(this);
+                    if (this.onstart(this)) {
+                        u.stop(e);
+                    }
                 }
             };
 
@@ -46,21 +47,21 @@ module ClipWall {
                 }
 
                 if (u.valid(this.onselecting)) {
-                    this.onselecting(this);
+                    if (this.onselecting(this)) {
+                        u.stop(e);
+                    }
                 }
-
-                u.stop(e);
             };
 
             this.mouseUp = (e) => {
                 this._flag = 0;
                 if (u.valid(this.onselected)) {
-                    this.onselected(this);
+                    if (this.onselected(this)) {
+                        u.stop(e);
+                    }
                 }
 
                 this._target = null;
-
-                u.stop(e);
             };
         }
 
@@ -77,7 +78,6 @@ module ClipWall {
             handle(g.b, "mousedown", this.mouseDown);
             handle(g.b, "mousemove", this.mouseMove);
             handle(g.b, "mouseup", this.mouseUp);
-            u.mouseselect(g.b, bind);
         }
     }
 }

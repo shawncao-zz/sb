@@ -4,6 +4,7 @@
 /// <reference path="panel.ts" />
 /// <reference path="mode.click.ts" />
 /// <reference path="mode.drag.ts" />
+/// <reference path="mode.select.ts" />
 var loaded;
 
 if (!loaded) {
@@ -16,6 +17,6 @@ if (!loaded) {
     ClipWall.Panel.CreatePanel();
 
     // use one clip mode for testing
-    var mode = new ClipWall.DragMode();
+    var mode = new ClipWall.SelectMode();
     mode.apply();
 }

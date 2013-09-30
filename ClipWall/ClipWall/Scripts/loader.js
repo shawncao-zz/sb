@@ -35,10 +35,14 @@ var ClipWall;
 
         // c_evt.fire(event, arguments);
         function fire(e) {
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 1); _i++) {
+                args[_i] = arguments[_i + 1];
+            }
             var handlers = cache[e];
             if (handlers) {
                 for (var i = 0; i < handlers.length; i++) {
-                    handlers[i](arguments);
+                    handlers[i](args);
                 }
             }
         }
@@ -260,11 +264,18 @@ var ClipWall;
 var ClipWall;
 (function (ClipWall) {
     var Panel = (function () {
-        function Panel(mode) {
-            this.mode = mode;
+        function Panel() {
+            this.modes = [];
+            var p = ClipWall.g.ce('div');
+            ClipWall.g.at(p, 'class', 'panel');
+            p.innerHTML = "Here will be menu for modes selection and content<div id='cnt'></div>";
+            ClipWall.g.b.insertBefore(p, ClipWall.g.b.firstChild);
+            ClipWall.e.bind("addcontent", function (text) {
+                ClipWall.g.ge("cnt").innerHTML += "<br/>" + text;
+            });
         }
         Panel.CreatePanel = function () {
-            return new Panel(0);
+            return new Panel();
         };
         return Panel;
     })();
@@ -617,8 +628,8 @@ var ClipWall;
 /// <reference path="utils.ts" />
 var ClipWall;
 (function (ClipWall) {
-    var Selection = (function () {
-        function Selection(start, selecting, selected) {
+    var Scrape = (function () {
+        function Scrape(start, selecting, selected) {
             var _this = this;
             this.onstart = start;
             this.onselecting = selecting;
@@ -629,11 +640,12 @@ var ClipWall;
                 _this._position = ClipWall.Point.from(e);
                 if (_this._flag === 0) {
                     _this._flag = 1;
-                    ClipWall.u.stop(e);
                 }
 
                 if (ClipWall.u.valid(_this.onstart)) {
-                    _this.onstart(_this);
+                    if (_this.onstart(_this)) {
+                        ClipWall.u.stop(e);
+                    }
                 }
             };
 
@@ -648,24 +660,24 @@ var ClipWall;
                 }
 
                 if (ClipWall.u.valid(_this.onselecting)) {
-                    _this.onselecting(_this);
+                    if (_this.onselecting(_this)) {
+                        ClipWall.u.stop(e);
+                    }
                 }
-
-                ClipWall.u.stop(e);
             };
 
             this.mouseUp = function (e) {
                 _this._flag = 0;
                 if (ClipWall.u.valid(_this.onselected)) {
-                    _this.onselected(_this);
+                    if (_this.onselected(_this)) {
+                        ClipWall.u.stop(e);
+                    }
                 }
 
                 _this._target = null;
-
-                ClipWall.u.stop(e);
             };
         }
-        Object.defineProperty(Selection.prototype, "target", {
+        Object.defineProperty(Scrape.prototype, "target", {
             get: function () {
                 return this._target;
             },
@@ -673,7 +685,7 @@ var ClipWall;
             configurable: true
         });
 
-        Object.defineProperty(Selection.prototype, "position", {
+        Object.defineProperty(Scrape.prototype, "position", {
             get: function () {
                 return this._position;
             },
@@ -681,20 +693,19 @@ var ClipWall;
             configurable: true
         });
 
-        Selection.prototype.enable = function (bind) {
+        Scrape.prototype.enable = function (bind) {
             var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
             handle(ClipWall.g.b, "mousedown", this.mouseDown);
             handle(ClipWall.g.b, "mousemove", this.mouseMove);
             handle(ClipWall.g.b, "mouseup", this.mouseUp);
-            ClipWall.u.mouseselect(ClipWall.g.b, bind);
         };
-        return Selection;
+        return Scrape;
     })();
-    ClipWall.Selection = Selection;
+    ClipWall.Scrape = Scrape;
 })(ClipWall || (ClipWall = {}));
 /// <reference path="mode.share.ts" />
 /// <reference path="../lib/page.ts" />
-/// <reference path="../lib/selection.ts" />
+/// <reference path="../lib/scrape.ts" />
 /// <reference path="../lib/utils.ts" />
 var ClipWall;
 (function (ClipWall) {
@@ -702,13 +713,14 @@ var ClipWall;
         function DragMode() {
             var _this = this;
             this.overlays = new ClipWall.c.List();
-            this.selection = new ClipWall.Selection(function (selection) {
+            this.selection = new ClipWall.Scrape(function (selection) {
                 _this.lastPosition = selection.position;
+                return true;
             }, function (selection) {
                 var newP = selection.position;
                 if (!ClipWall.u.valid(_this.lastPosition)) {
                     _this.lastPosition = newP;
-                    return;
+                    return true;
                 }
 
                 var gap = newP.substract(_this.lastPosition);
@@ -720,20 +732,25 @@ var ClipWall;
                 }
 
                 _this.lastPosition = newP;
+                return true;
             }, function () {
                 if (ClipWall.u.valid(_this.dragTarget)) {
                     _this.clearOverlap(_this.dragTarget.getBoundingClientRect());
                     _this.overlays.add(_this.dragTarget);
                     _this.dragTarget = null;
                 }
+
+                return true;
             });
         }
         DragMode.prototype.apply = function () {
             this.selection.enable(true);
+            ClipWall.u.mouseselect(ClipWall.g.b, true);
         };
 
         DragMode.prototype.dispose = function () {
             this.selection.enable(false);
+            ClipWall.u.mouseselect(ClipWall.g.b, false);
         };
 
         DragMode.prototype.clearOverlap = function (rect) {
@@ -752,12 +769,90 @@ var ClipWall;
     })();
     ClipWall.DragMode = DragMode;
 })(ClipWall || (ClipWall = {}));
+/// <reference path="clip.ts" />
+/// <reference path="../lib/scrape.ts" />
+var ClipWall;
+(function (ClipWall) {
+    var SelectMode = (function () {
+        function SelectMode() {
+            var _this = this;
+            this.scrape = new ClipWall.Scrape(function (scrape) {
+                return false;
+            }, function (scrape) {
+                return false;
+            }, function () {
+                _this.detectSelection();
+                return false;
+            });
+        }
+        SelectMode.prototype.apply = function () {
+            this.scrape.enable(true);
+        };
+
+        SelectMode.prototype.dispose = function () {
+            this.scrape.enable(false);
+        };
+
+        SelectMode.prototype.detectSelection = function () {
+            var text = this.selectedText();
+            ClipWall.e.fire("addcontent", text);
+            this.highlight('yellow');
+        };
+
+        SelectMode.prototype.makeEditableAndHighlight = function (color) {
+            var sel = ClipWall.g.w.getSelection();
+            ClipWall.g.d.designMode = "on";
+            if (sel.rangeCount && sel.getRangeAt) {
+                var range = sel.getRangeAt(0);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+
+            if (!ClipWall.g.d.execCommand("HiliteColor", false, color)) {
+                ClipWall.g.d.execCommand("BackColor", false, color);
+            }
+            ClipWall.g.d.designMode = "off";
+        };
+
+        SelectMode.prototype.highlight = function (color) {
+            if (ClipWall.g.w.getSelection) {
+                try  {
+                    if (!document.execCommand("BackColor", false, color)) {
+                        this.makeEditableAndHighlight(color);
+                    }
+                } catch (ex) {
+                    this.makeEditableAndHighlight(color);
+                }
+            } else if (ClipWall.g.d.selection && ClipWall.g.d.selection.createRange) {
+                // IE <= 8 case
+                var range = ClipWall.g.d.selection.createRange();
+                range.execCommand("BackColor", false, color);
+            }
+        };
+
+        SelectMode.prototype.selectedText = function () {
+            if (ClipWall.g.w.getSelection) {
+                var sel = ClipWall.g.w.getSelection();
+                if (sel.rangeCount && sel.getRangeAt) {
+                    return sel.getRangeAt(0).toString();
+                }
+            } else if (ClipWall.g.d.selection.createRange) {
+                return ClipWall.g.d.selection.createRange().text;
+            }
+
+            return '';
+        };
+        return SelectMode;
+    })();
+    ClipWall.SelectMode = SelectMode;
+})(ClipWall || (ClipWall = {}));
 /// <reference path="../lib/page.ts" />
 /// <reference path="../lib/utils.ts" />
 /// <reference path="../lib/css.ts" />
 /// <reference path="panel.ts" />
 /// <reference path="mode.click.ts" />
 /// <reference path="mode.drag.ts" />
+/// <reference path="mode.select.ts" />
 var loaded;
 
 if (!loaded) {
@@ -770,6 +865,6 @@ if (!loaded) {
     ClipWall.Panel.CreatePanel();
 
     // use one clip mode for testing
-    var mode = new ClipWall.DragMode();
+    var mode = new ClipWall.SelectMode();
     mode.apply();
 }

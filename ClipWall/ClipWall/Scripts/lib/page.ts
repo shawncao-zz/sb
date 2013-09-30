@@ -26,17 +26,17 @@ module ClipWall {
         var cache: any = {};
 
         // c_evt.fire(event, arguments);
-        export function fire(e: string) {
+        export function fire(e: string, ...args: any[]) {
             var handlers = cache[e];
             if (handlers) {
                 for (var i = 0; i < handlers.length; i++) {
-                    handlers[i](arguments);
+                    handlers[i](args);
                 }
             }
         }
 
         // c_evt.bind(event, handler);
-        export function bind(event: string, handler: () => any) {
+        export function bind(event: string, handler: (...args: any[]) => void) {
             var handlers = cache[event];
             if (!handlers) {
                 handlers = [];

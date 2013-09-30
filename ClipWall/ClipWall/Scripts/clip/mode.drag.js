@@ -1,6 +1,6 @@
 /// <reference path="mode.share.ts" />
 /// <reference path="../lib/page.ts" />
-/// <reference path="../lib/selection.ts" />
+/// <reference path="../lib/scrape.ts" />
 /// <reference path="../lib/utils.ts" />
 var ClipWall;
 (function (ClipWall) {
@@ -8,13 +8,14 @@ var ClipWall;
         function DragMode() {
             var _this = this;
             this.overlays = new ClipWall.c.List();
-            this.selection = new ClipWall.Selection(function (selection) {
+            this.selection = new ClipWall.Scrape(function (selection) {
                 _this.lastPosition = selection.position;
+                return true;
             }, function (selection) {
                 var newP = selection.position;
                 if (!ClipWall.u.valid(_this.lastPosition)) {
                     _this.lastPosition = newP;
-                    return;
+                    return true;
                 }
 
                 var gap = newP.substract(_this.lastPosition);
@@ -26,20 +27,25 @@ var ClipWall;
                 }
 
                 _this.lastPosition = newP;
+                return true;
             }, function () {
                 if (ClipWall.u.valid(_this.dragTarget)) {
                     _this.clearOverlap(_this.dragTarget.getBoundingClientRect());
                     _this.overlays.add(_this.dragTarget);
                     _this.dragTarget = null;
                 }
+
+                return true;
             });
         }
         DragMode.prototype.apply = function () {
             this.selection.enable(true);
+            ClipWall.u.mouseselect(ClipWall.g.b, true);
         };
 
         DragMode.prototype.dispose = function () {
             this.selection.enable(false);
+            ClipWall.u.mouseselect(ClipWall.g.b, false);
         };
 
         DragMode.prototype.clearOverlap = function (rect) {

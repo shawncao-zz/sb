@@ -1,27 +1,28 @@
 /// <reference path="mode.share.ts" />
 /// <reference path="../lib/page.ts" />
-/// <reference path="../lib/selection.ts" />
+/// <reference path="../lib/scrape.ts" />
 /// <reference path="../lib/utils.ts" />
 
 module ClipWall {
     export class DragMode implements IClipMode {
         private overlays: c.IList<HTMLElement> = new c.List();
-        private selection: Selection;
+        private selection: Scrape;
         // mouse drag
         private lastPosition: Point;
         private dragTarget: HTMLElement;
 
         constructor() {
-            this.selection = new Selection(
-                (selection: Selection) => {
+            this.selection = new Scrape(
+                (selection: Scrape) => {
                     this.lastPosition = selection.position;
+                    return true;
                 },
 
-                (selection: Selection) => {
+                (selection: Scrape) => {
                     var newP = selection.position;
                     if (!u.valid(this.lastPosition)) {
                         this.lastPosition = newP;
-                        return;
+                        return true;
                     }
 
                     var gap = newP.substract(this.lastPosition);
@@ -33,6 +34,7 @@ module ClipWall {
                     }
 
                     this.lastPosition = newP;
+                    return true;
                 },
 
                 () => {
@@ -41,15 +43,19 @@ module ClipWall {
                         this.overlays.add(this.dragTarget);
                         this.dragTarget = null;
                     }
+
+                    return true;
                 });
         }
 
         public apply(): void {
             this.selection.enable(true);
+            u.mouseselect(g.b, true);
         }
 
         public dispose(): void {
             this.selection.enable(false);
+            u.mouseselect(g.b, false);
         }
 
         private clearOverlap(rect: ClientRect) {

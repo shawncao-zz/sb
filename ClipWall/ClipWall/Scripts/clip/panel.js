@@ -1,11 +1,18 @@
 var ClipWall;
 (function (ClipWall) {
     var Panel = (function () {
-        function Panel(mode) {
-            this.mode = mode;
+        function Panel() {
+            this.modes = [];
+            var p = ClipWall.g.ce('div');
+            ClipWall.g.at(p, 'class', 'panel');
+            p.innerHTML = "Here will be menu for modes selection and content<div id='cnt'></div>";
+            ClipWall.g.b.insertBefore(p, ClipWall.g.b.firstChild);
+            ClipWall.e.bind("addcontent", function (text) {
+                ClipWall.g.ge("cnt").innerHTML += "<br/>" + text;
+            });
         }
         Panel.CreatePanel = function () {
-            return new Panel(0);
+            return new Panel();
         };
         return Panel;
     })();

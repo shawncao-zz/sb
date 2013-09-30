@@ -1,8 +1,8 @@
 /// <reference path="utils.ts" />
 var ClipWall;
 (function (ClipWall) {
-    var Selection = (function () {
-        function Selection(start, selecting, selected) {
+    var Scrape = (function () {
+        function Scrape(start, selecting, selected) {
             var _this = this;
             this.onstart = start;
             this.onselecting = selecting;
@@ -50,7 +50,7 @@ var ClipWall;
                 _this._target = null;
             };
         }
-        Object.defineProperty(Selection.prototype, "target", {
+        Object.defineProperty(Scrape.prototype, "target", {
             get: function () {
                 return this._target;
             },
@@ -58,7 +58,7 @@ var ClipWall;
             configurable: true
         });
 
-        Object.defineProperty(Selection.prototype, "position", {
+        Object.defineProperty(Scrape.prototype, "position", {
             get: function () {
                 return this._position;
             },
@@ -66,13 +66,13 @@ var ClipWall;
             configurable: true
         });
 
-        Selection.prototype.enable = function (bind) {
+        Scrape.prototype.enable = function (bind) {
             var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
             handle(ClipWall.g.b, "mousedown", this.mouseDown);
             handle(ClipWall.g.b, "mousemove", this.mouseMove);
             handle(ClipWall.g.b, "mouseup", this.mouseUp);
         };
-        return Selection;
+        return Scrape;
     })();
-    ClipWall.Selection = Selection;
+    ClipWall.Scrape = Scrape;
 })(ClipWall || (ClipWall = {}));

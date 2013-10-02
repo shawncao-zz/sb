@@ -5,14 +5,14 @@ module ClipWall {
     export function createOverlay(under?: HTMLElement): HTMLElement {
         var s = g.ce('div');
         if (under === g.b) {
-            g.at(s, 'class', 'greyout');
+            g.sat(s, 'class', 'greyout');
         } else {
             var rect = { top: 0, left: 0, width: 0, height: 0 };
             if (u.valid(under)) {
                 rect = under.getBoundingClientRect();
             }
-            g.at(s, 'class', 'overlay');
-            g.at(s, 'style', u.format(greyoutPattern,
+            g.sat(s, 'class', 'overlay');
+            g.sat(s, 'style', u.format(greyoutPattern,
                 rect.top.toString(),
                 rect.left.toString(),
                 rect.width.toString(),

@@ -7,14 +7,14 @@ var ClipWall;
     function createOverlay(under) {
         var s = ClipWall.g.ce('div');
         if (under === ClipWall.g.b) {
-            ClipWall.g.at(s, 'class', 'greyout');
+            ClipWall.g.sat(s, 'class', 'greyout');
         } else {
             var rect = { top: 0, left: 0, width: 0, height: 0 };
             if (ClipWall.u.valid(under)) {
                 rect = under.getBoundingClientRect();
             }
-            ClipWall.g.at(s, 'class', 'overlay');
-            ClipWall.g.at(s, 'style', ClipWall.u.format(greyoutPattern, rect.top.toString(), rect.left.toString(), rect.width.toString(), rect.height.toString()));
+            ClipWall.g.sat(s, 'class', 'overlay');
+            ClipWall.g.sat(s, 'style', ClipWall.u.format(greyoutPattern, rect.top.toString(), rect.left.toString(), rect.width.toString(), rect.height.toString()));
             //s.innerHTML = "<p>drag to expand it...</p>";
         }
 

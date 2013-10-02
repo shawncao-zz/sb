@@ -7,7 +7,7 @@
 
 module ClipWall {
     export class ClickMode implements IClipMode {
-
+        public static Name: string = "m_clk";
         // key is the overlay
         private lastFocus: c.KeyValuePair<HTMLElement, HTMLElement>;
         private selections: c.IDictionary<HTMLElement, HTMLElement> = new c.Dictionary();
@@ -43,6 +43,10 @@ module ClipWall {
             this.scroll = () => {
                 this.updateSelections();
             };
+        }
+
+        public get name(): string {
+            return ClickMode.Name;
         }
 
         public apply(): void {
@@ -101,6 +105,7 @@ module ClipWall {
                 if (this.lastFocus && this.lastFocus.key == overlay) {
                     this.removeChildren(this.lastFocus.value);
                     this.selections.add(this.lastFocus.key, this.lastFocus.value);
+                    e.fire("addcontent", this.lastFocus.value.innerHTML);
                 }
             } else {
                 this.removeSelection(overlay);

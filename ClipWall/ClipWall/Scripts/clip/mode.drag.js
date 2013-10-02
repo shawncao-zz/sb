@@ -38,6 +38,14 @@ var ClipWall;
                 return true;
             });
         }
+        Object.defineProperty(DragMode.prototype, "name", {
+            get: function () {
+                return DragMode.Name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         DragMode.prototype.apply = function () {
             this.selection.enable(true);
             ClipWall.u.mouseselect(ClipWall.g.b, true);
@@ -60,6 +68,7 @@ var ClipWall;
         DragMode.prototype.overlap = function (rect1, rect2) {
             return true;
         };
+        DragMode.Name = "m_drg";
         return DragMode;
     })();
     ClipWall.DragMode = DragMode;

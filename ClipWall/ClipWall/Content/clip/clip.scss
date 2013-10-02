@@ -51,7 +51,7 @@
     z-index:100000;
     left: 0;
     margin-left: -300px;
-    width: 354px;
+    width: 355px;
     height: 500px;
     border: 1px solid;
     display: inline-block;
@@ -99,9 +99,14 @@
     
     ul{
         list-style-type: none;
+        padding: 0;
+        margin: 0;
     }
 
     li{
         margin-bottom: 10px;
+        &:hover {
+            cursor: pointer;
+        }
     }
 }

@@ -15,6 +15,14 @@ var ClipWall;
                 return false;
             });
         }
+        Object.defineProperty(SelectMode.prototype, "name", {
+            get: function () {
+                return SelectMode.Name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         SelectMode.prototype.apply = function () {
             this.scrape.enable(true);
         };
@@ -76,6 +84,7 @@ var ClipWall;
 
             return '';
         };
+        SelectMode.Name = "m_sel";
         return SelectMode;
     })();
     ClipWall.SelectMode = SelectMode;

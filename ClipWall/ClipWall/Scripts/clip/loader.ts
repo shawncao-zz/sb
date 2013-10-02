@@ -7,12 +7,14 @@
 /// <reference path="mode.select.ts" />
 
 var loaded;
+var panel = {};
 // do not load twice
 if (!loaded) {
     loaded = true;
+
     // load css file we need
     ClipWall.Css.load("clip");
 
     // create a panel
-    ClipWall.Panel.CreatePanel();
+    panel = ClipWall.Panel.CreatePanel();
 }

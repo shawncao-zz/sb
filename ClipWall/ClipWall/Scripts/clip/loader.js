@@ -6,6 +6,7 @@
 /// <reference path="mode.drag.ts" />
 /// <reference path="mode.select.ts" />
 var loaded;
+var panel = {};
 
 if (!loaded) {
     loaded = true;
@@ -14,5 +15,5 @@ if (!loaded) {
     ClipWall.Css.load("clip");
 
     // create a panel
-    ClipWall.Panel.CreatePanel();
+    panel = ClipWall.Panel.CreatePanel();
 }

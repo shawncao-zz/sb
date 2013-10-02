@@ -19,7 +19,10 @@ var ClipWall;
         g.ce = function (tag) {
             return g.d.createElement(tag);
         };
-        g.at = function (elem, name, val) {
+        g.gat = function (elem, name) {
+            return elem.getAttribute(name);
+        };
+        g.sat = function (elem, name, val) {
             return elem.setAttribute(name, val);
         };
 
@@ -208,9 +211,9 @@ var ClipWall;
     (function (Css) {
         function load(path) {
             var s = ClipWall.g.ce('link');
-            ClipWall.g.at(s, 'type', 'text/css');
-            ClipWall.g.at(s, 'rel', 'stylesheet');
-            ClipWall.g.at(s, 'href', ClipWall.u.fullpath(path));
+            ClipWall.g.sat(s, 'type', 'text/css');
+            ClipWall.g.sat(s, 'rel', 'stylesheet');
+            ClipWall.g.sat(s, 'href', ClipWall.u.fullpath(path));
             ClipWall.g.gt('body')[0].appendChild(s);
         }
         Css.load = load;
@@ -266,27 +269,93 @@ var ClipWall;
     var Panel = (function () {
         function Panel() {
             this.modes = [];
-            var p = ClipWall.g.ce('div');
-            ClipWall.g.at(p, 'class', 'panel');
-            p.innerHTML = "<div id='cnt' class='left'></div>" + "<div class='right'>" + "<ul>" + "<li class='b_expand' />" + "<li class='b_pick' />" + "<li class='b_select' />" + "<li class='b_login' />" + "</ul>" + "</div>";
+            this.mLeft = ['0', '-300px'];
+            this.mIndex = 0;
+            this.panel = ClipWall.g.ce('div');
+            ClipWall.g.sat(this.panel, 'class', 'panel');
+            this.panel.innerHTML = "<div id='cnt' class='left'></div>" + "<div class='right'>" + "<ul>" + "<li class='b_expand' onclick='panel.menuClick(this);' />" + "<li class='b_pick' onclick='panel.menuClick(this);' />" + "<li class='b_select' onclick='panel.menuClick(this);' />" + "<li class='b_login' onclick='panel.menuClick(this);' />" + "</ul>" + "</div>";
 
-            ClipWall.g.b.insertBefore(p, ClipWall.g.b.firstChild);
+            ClipWall.g.b.insertBefore(this.panel, ClipWall.g.b.firstChild);
             ClipWall.e.bind("addcontent", function (args) {
                 ClipWall.g.ge("cnt").innerHTML += "<br/>" + args[0];
             });
 
             // create default mode
-            this.createMode(p);
+            this.createMode();
         }
         Panel.CreatePanel = function () {
             return new Panel();
         };
 
-        Panel.prototype.createMode = function (panel) {
+        Panel.prototype.createMode = function () {
             // use one clip mode for default
-            var mode = new ClipWall.SelectMode(panel);
+            var mode = new ClipWall.SelectMode(this.panel);
             mode.apply();
             this.modes.push(mode);
+
+            // other modes push to the collection
+            this.modes.push(new ClipWall.ClickMode(this.panel));
+        };
+
+        Panel.prototype.menuClick = function (item) {
+            switch (item.className) {
+                case "b_expand":
+                    this.clickExpand();
+                    break;
+                case "b_pick":
+                    this.clickPickMode();
+                    break;
+                case "b_select":
+                    this.clickSelectMode();
+                    break;
+                case "b_login":
+                    this.clickLogin();
+                    break;
+            }
+        };
+
+        Panel.prototype.clickExpand = function () {
+            this.panel.style.marginLeft = this.mLeft[this.mIndex];
+            this.mIndex = (this.mIndex + 1) % this.mLeft.length;
+        };
+
+        Panel.prototype.clickPickMode = function () {
+            var mode = this.getMode(ClipWall.ClickMode.Name);
+            if (mode == null) {
+                throw new Error('this mode is not supported');
+            }
+
+            this.disposeAll();
+            mode.apply();
+        };
+
+        Panel.prototype.clickSelectMode = function () {
+            var mode = this.getMode(ClipWall.SelectMode.Name);
+            if (mode == null) {
+                throw new Error('this mode is not supported');
+            }
+
+            this.disposeAll();
+            mode.apply();
+        };
+
+        Panel.prototype.clickLogin = function () {
+        };
+
+        Panel.prototype.getMode = function (name) {
+            for (var i = 0; i < this.modes.length; ++i) {
+                if (this.modes[i].name === name) {
+                    return this.modes[i];
+                }
+            }
+
+            return null;
+        };
+
+        Panel.prototype.disposeAll = function () {
+            for (var i = 0; i < this.modes.length; ++i) {
+                this.modes[i].dispose();
+            }
         };
         return Panel;
     })();
@@ -301,14 +370,14 @@ var ClipWall;
     function createOverlay(under) {
         var s = ClipWall.g.ce('div');
         if (under === ClipWall.g.b) {
-            ClipWall.g.at(s, 'class', 'greyout');
+            ClipWall.g.sat(s, 'class', 'greyout');
         } else {
             var rect = { top: 0, left: 0, width: 0, height: 0 };
             if (ClipWall.u.valid(under)) {
                 rect = under.getBoundingClientRect();
             }
-            ClipWall.g.at(s, 'class', 'overlay');
-            ClipWall.g.at(s, 'style', ClipWall.u.format(greyoutPattern, rect.top.toString(), rect.left.toString(), rect.width.toString(), rect.height.toString()));
+            ClipWall.g.sat(s, 'class', 'overlay');
+            ClipWall.g.sat(s, 'style', ClipWall.u.format(greyoutPattern, rect.top.toString(), rect.left.toString(), rect.width.toString(), rect.height.toString()));
             //s.innerHTML = "<p>drag to expand it...</p>";
         }
 
@@ -518,6 +587,14 @@ var ClipWall;
                 _this.updateSelections();
             };
         }
+        Object.defineProperty(ClickMode.prototype, "name", {
+            get: function () {
+                return ClickMode.Name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         ClickMode.prototype.apply = function () {
             this.initOffset = new ClipWall.Point(ClipWall.g.w.pageXOffset, ClipWall.g.w.pageYOffset);
             this.hook(true);
@@ -570,6 +647,7 @@ var ClipWall;
                 if (this.lastFocus && this.lastFocus.key == overlay) {
                     this.removeChildren(this.lastFocus.value);
                     this.selections.add(this.lastFocus.key, this.lastFocus.value);
+                    ClipWall.e.fire("addcontent", this.lastFocus.value.innerHTML);
                 }
             } else {
                 this.removeSelection(overlay);
@@ -633,6 +711,7 @@ var ClipWall;
 
             return true;
         };
+        ClickMode.Name = "m_clk";
         return ClickMode;
     })();
     ClipWall.ClickMode = ClickMode;
@@ -760,6 +839,14 @@ var ClipWall;
                 return true;
             });
         }
+        Object.defineProperty(DragMode.prototype, "name", {
+            get: function () {
+                return DragMode.Name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         DragMode.prototype.apply = function () {
             this.selection.enable(true);
             ClipWall.u.mouseselect(ClipWall.g.b, true);
@@ -782,6 +869,7 @@ var ClipWall;
         DragMode.prototype.overlap = function (rect1, rect2) {
             return true;
         };
+        DragMode.Name = "m_drg";
         return DragMode;
     })();
     ClipWall.DragMode = DragMode;
@@ -803,6 +891,14 @@ var ClipWall;
                 return false;
             });
         }
+        Object.defineProperty(SelectMode.prototype, "name", {
+            get: function () {
+                return SelectMode.Name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         SelectMode.prototype.apply = function () {
             this.scrape.enable(true);
         };
@@ -864,6 +960,7 @@ var ClipWall;
 
             return '';
         };
+        SelectMode.Name = "m_sel";
         return SelectMode;
     })();
     ClipWall.SelectMode = SelectMode;
@@ -876,6 +973,7 @@ var ClipWall;
 /// <reference path="mode.drag.ts" />
 /// <reference path="mode.select.ts" />
 var loaded;
+var panel = {};
 
 if (!loaded) {
     loaded = true;
@@ -884,5 +982,5 @@ if (!loaded) {
     ClipWall.Css.load("clip");
 
     // create a panel
-    ClipWall.Panel.CreatePanel();
+    panel = ClipWall.Panel.CreatePanel();
 }

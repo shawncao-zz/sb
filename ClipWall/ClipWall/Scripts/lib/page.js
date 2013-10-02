@@ -19,7 +19,10 @@ var ClipWall;
         g.ce = function (tag) {
             return g.d.createElement(tag);
         };
-        g.at = function (elem, name, val) {
+        g.gat = function (elem, name) {
+            return elem.getAttribute(name);
+        };
+        g.sat = function (elem, name, val) {
             return elem.setAttribute(name, val);
         };
 

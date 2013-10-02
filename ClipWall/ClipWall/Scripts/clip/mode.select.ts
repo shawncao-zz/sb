@@ -3,6 +3,7 @@
 
 module ClipWall {
     export class SelectMode implements IClipMode {
+        public static Name: string = "m_sel";
         private scrape: Scrape;
         constructor(private panel: HTMLElement) {
             this.scrape = new Scrape(
@@ -12,6 +13,10 @@ module ClipWall {
                     this.detectSelection();
                     return false;
                 });
+        }
+
+        public get name(): string {
+            return SelectMode.Name;
         }
 
         public apply(): void {

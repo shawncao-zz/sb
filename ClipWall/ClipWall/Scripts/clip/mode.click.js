@@ -36,6 +36,14 @@ var ClipWall;
                 _this.updateSelections();
             };
         }
+        Object.defineProperty(ClickMode.prototype, "name", {
+            get: function () {
+                return ClickMode.Name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
         ClickMode.prototype.apply = function () {
             this.initOffset = new ClipWall.Point(ClipWall.g.w.pageXOffset, ClipWall.g.w.pageYOffset);
             this.hook(true);
@@ -88,6 +96,7 @@ var ClipWall;
                 if (this.lastFocus && this.lastFocus.key == overlay) {
                     this.removeChildren(this.lastFocus.value);
                     this.selections.add(this.lastFocus.key, this.lastFocus.value);
+                    ClipWall.e.fire("addcontent", this.lastFocus.value.innerHTML);
                 }
             } else {
                 this.removeSelection(overlay);
@@ -151,6 +160,7 @@ var ClipWall;
 
             return true;
         };
+        ClickMode.Name = "m_clk";
         return ClickMode;
     })();
     ClipWall.ClickMode = ClickMode;

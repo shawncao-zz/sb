@@ -5,6 +5,7 @@
 
 module ClipWall {
     export class DragMode implements IClipMode {
+        public static Name: string = "m_drg";
         private overlays: c.IList<HTMLElement> = new c.List();
         private selection: Scrape;
         // mouse drag
@@ -46,6 +47,10 @@ module ClipWall {
 
                     return true;
                 });
+        }
+
+        public get name(): string {
+            return DragMode.Name;
         }
 
         public apply(): void {

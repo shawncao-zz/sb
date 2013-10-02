@@ -14,7 +14,8 @@ module ClipWall {
         export var ge = (id: string) => d.getElementById(id);
         export var gt = (tag: string) => d.getElementsByTagName(tag);
         export var ce = (tag: string) => d.createElement(tag);
-        export var at = (elem: HTMLElement, name: string, val: string) => elem.setAttribute(name, val);
+        export var gat = (elem: HTMLElement, name: string) => elem.getAttribute(name);
+        export var sat = (elem: HTMLElement, name: string, val: string) => elem.setAttribute(name, val);
 
         //replace this with final domain when publish
         export var h = "http://localhost:22128/";

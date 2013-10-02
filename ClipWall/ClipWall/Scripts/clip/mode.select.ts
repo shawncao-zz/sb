@@ -4,7 +4,7 @@
 module ClipWall {
     export class SelectMode implements IClipMode {
         private scrape: Scrape;
-        constructor() {
+        constructor(private panel: HTMLElement) {
             this.scrape = new Scrape(
                 (scrape: Scrape) => false,
                 (scrape: Scrape) => false,
@@ -23,9 +23,14 @@ module ClipWall {
         }
 
         private detectSelection() {
-            var text = this.selectedText();
-            e.fire("addcontent", text);
-            this.highlight('yellow');
+            // exclude operations on panel
+            if(!u.contains(this.panel, this.scrape.target)) {
+                var text = this.selectedText();
+                if (!u.empty(text)) {
+                    e.fire("addcontent", text, this.scrape.target);
+                    this.highlight('yellow');
+                }
+            }
         }
 
         private makeEditableAndHighlight(color): void {

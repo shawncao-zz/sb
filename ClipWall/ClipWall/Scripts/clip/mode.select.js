@@ -3,8 +3,9 @@
 var ClipWall;
 (function (ClipWall) {
     var SelectMode = (function () {
-        function SelectMode() {
+        function SelectMode(panel) {
             var _this = this;
+            this.panel = panel;
             this.scrape = new ClipWall.Scrape(function (scrape) {
                 return false;
             }, function (scrape) {
@@ -23,9 +24,13 @@ var ClipWall;
         };
 
         SelectMode.prototype.detectSelection = function () {
-            var text = this.selectedText();
-            ClipWall.e.fire("addcontent", text);
-            this.highlight('yellow');
+            if (!ClipWall.u.contains(this.panel, this.scrape.target)) {
+                var text = this.selectedText();
+                if (!ClipWall.u.empty(text)) {
+                    ClipWall.e.fire("addcontent", text, this.scrape.target);
+                    this.highlight('yellow');
+                }
+            }
         };
 
         SelectMode.prototype.makeEditableAndHighlight = function (color) {

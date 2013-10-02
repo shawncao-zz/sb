@@ -276,6 +276,10 @@
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <TypeScriptCompile Include="Scripts\lib\scrape.ts" />
     <TypeScriptCompile Include="Scripts\clip\mode.select.ts" />
+    <Content Include="Images\clip\expand.png" />
+    <Content Include="Images\clip\login.png" />
+    <Content Include="Images\clip\pick.png" />
+    <Content Include="Images\clip\select.png" />
     <Content Include="Scripts\masonry.js" />
     <Content Include="Views\Index\Index.cshtml" />
     <TypeScriptCompile Include="Scripts\run.ts" />

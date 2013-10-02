@@ -7,7 +7,7 @@ module ClipWall {
         private mouseMove: (e) => any;
         private _target: HTMLElement;
         private _position: Point;
-        private _flag: number;
+        private _flag: number = 0;
 
         private onstart: (s: Scrape) => boolean;
         private onselecting: (s: Scrape) => boolean;
@@ -54,6 +54,10 @@ module ClipWall {
             };
 
             this.mouseUp = (e) => {
+                if (this._flag != 2) {
+                    return;
+                }
+
                 this._flag = 0;
                 if (u.valid(this.onselected)) {
                     if (this.onselected(this)) {

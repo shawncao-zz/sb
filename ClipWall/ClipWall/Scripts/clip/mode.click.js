@@ -7,8 +7,9 @@
 var ClipWall;
 (function (ClipWall) {
     var ClickMode = (function () {
-        function ClickMode() {
+        function ClickMode(panel) {
             var _this = this;
+            this.panel = panel;
             this.selections = new ClipWall.c.Dictionary();
             this.overlays = new ClipWall.c.List();
             this.moflag = true;

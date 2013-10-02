@@ -15,8 +15,4 @@ if (!loaded) {
 
     // create a panel
     ClipWall.Panel.CreatePanel();
-
-    // use one clip mode for testing
-    var mode = new ClipWall.SelectMode();
-    mode.apply();
 }

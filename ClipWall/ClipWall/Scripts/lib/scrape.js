@@ -4,6 +4,7 @@ var ClipWall;
     var Scrape = (function () {
         function Scrape(start, selecting, selected) {
             var _this = this;
+            this._flag = 0;
             this.onstart = start;
             this.onselecting = selecting;
             this.onselected = selected;
@@ -40,6 +41,10 @@ var ClipWall;
             };
 
             this.mouseUp = function (e) {
+                if (_this._flag != 2) {
+                    return;
+                }
+
                 _this._flag = 0;
                 if (ClipWall.u.valid(_this.onselected)) {
                     if (_this.onselected(_this)) {

@@ -20,7 +20,7 @@ module ClipWall {
         private moflag: boolean = true;
         private initOffset: Point;
 
-        constructor() {
+        constructor(private panel: HTMLElement) {
             this.mouseOver = (e) => {
                 if (!this.moflag) {
                     return;

@@ -2,16 +2,24 @@ var ClipWall;
 (function (ClipWall) {
     var Panel = (function () {
         function Panel() {
+            var _this = this;
             this.modes = [];
             this.mLeft = ['0', '-300px'];
             this.mIndex = 0;
             this.panel = ClipWall.g.ce('div');
             ClipWall.g.sat(this.panel, 'class', 'panel');
-            this.panel.innerHTML = "<div id='cnt' class='left'></div>" + "<div class='right'>" + "<ul>" + "<li class='b_expand' onclick='panel.menuClick(this);' />" + "<li class='b_pick' onclick='panel.menuClick(this);' />" + "<li class='b_select' onclick='panel.menuClick(this);' />" + "<li class='b_login' onclick='panel.menuClick(this);' />" + "</ul>" + "</div>";
+            this.panel.innerHTML = "<div id='cnt' class='left'></div>" + "<div id='mnu' class='right'>" + "<ul>" + "<li class='b_expand' onclick='panel.mc(this);' />" + "<li class='b_pick' onclick='panel.mc(this);' />" + "<li class='b_select' onclick='panel.mc(this);' />" + "<li class='b_login' onclick='panel.mc(this);' />" + "</ul>" + "</div>";
 
             ClipWall.g.b.insertBefore(this.panel, ClipWall.g.b.firstChild);
+
+            //set menu item click handling
+            var items = this.panel.querySelectorAll("li");
+            for (var i = 0; i < items.length; ++i) {
+                ClipWall.g.sat(items[i], "onclick", "panel.mc(this);");
+            }
+
             ClipWall.e.bind("addcontent", function (args) {
-                ClipWall.g.ge("cnt").innerHTML += "<br/>" + args[0];
+                ClipWall.g.ge("cnt").appendChild(_this.newNode(args[0]));
             });
 
             // create default mode
@@ -21,6 +29,12 @@ var ClipWall;
             return new Panel();
         };
 
+        Panel.prototype.newNode = function (content) {
+            var div = ClipWall.g.ce("div");
+            div.innerHTML = content;
+            return div;
+        };
+
         Panel.prototype.createMode = function () {
             // use one clip mode for default
             var mode = new ClipWall.SelectMode(this.panel);
@@ -28,10 +42,12 @@ var ClipWall;
             this.modes.push(mode);
 
             // other modes push to the collection
-            this.modes.push(new ClipWall.ClickMode(this.panel));
+            var cm = new ClipWall.ClickMode(this.panel);
+            cm.apply();
+            this.modes.push(cm);
         };
 
-        Panel.prototype.menuClick = function (item) {
+        Panel.prototype.mc = function (item) {
             switch (item.className) {
                 case "b_expand":
                     this.clickExpand();

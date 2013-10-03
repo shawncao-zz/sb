@@ -13,22 +13,35 @@ module ClipWall {
             this.panel = g.ce('div');
             g.sat(this.panel, 'class', 'panel');
             this.panel.innerHTML = "<div id='cnt' class='left'></div>"
-            + "<div class='right'>"
+            + "<div id='mnu' class='right'>"
             + "<ul>"
-            + "<li class='b_expand' onclick='panel.menuClick(this);' />"
-            + "<li class='b_pick' onclick='panel.menuClick(this);' />"
-            + "<li class='b_select' onclick='panel.menuClick(this);' />"
-            + "<li class='b_login' onclick='panel.menuClick(this);' />"
+            + "<li class='b_expand' onclick='panel.mc(this);' />"
+            + "<li class='b_pick' onclick='panel.mc(this);' />"
+            + "<li class='b_select' onclick='panel.mc(this);' />"
+            + "<li class='b_login' onclick='panel.mc(this);' />"
             + "</ul>"
             + "</div>";
 
             g.b.insertBefore(this.panel, g.b.firstChild);
+
+            //set menu item click handling
+            var items = this.panel.querySelectorAll("li");
+            for (var i = 0; i < items.length; ++i) {
+                g.sat(<HTMLElement>items[i], "onclick", "panel.mc(this);");
+            }
+
             e.bind("addcontent", (args) => {
-                g.ge("cnt").innerHTML += "<br/>" + args[0];
+                g.ge("cnt").appendChild(this.newNode(args[0]));
             });
 
             // create default mode
             this.createMode();
+        }
+
+        private newNode(content): HTMLElement {
+            var div = g.ce("div");
+            div.innerHTML = content;
+            return div;
         }
 
         private createMode() {
@@ -38,10 +51,12 @@ module ClipWall {
             this.modes.push(mode);
 
             // other modes push to the collection
-            this.modes.push(new ClipWall.ClickMode(this.panel));
+            var cm = new ClipWall.ClickMode(this.panel);
+            cm.apply();
+            this.modes.push(cm);
         }
 
-        private menuClick(item: HTMLElement) {
+        private mc(item: HTMLElement) {
             switch (item.className) {
                 case "b_expand": this.clickExpand(); break;
                 case "b_pick": this.clickPickMode(); break;

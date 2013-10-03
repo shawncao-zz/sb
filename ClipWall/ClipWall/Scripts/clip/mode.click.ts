@@ -38,8 +38,6 @@ module ClipWall {
                 u.stop(e);
             };
 
-
-
             this.scroll = () => {
                 this.updateSelections();
             };
@@ -142,6 +140,7 @@ module ClipWall {
         }
 
         private updateSelections(): void {
+            console.log('called');
             this.removeLastIfNotSelected();
             var newPoint = new Point(pageXOffset, pageYOffset);
             var gap = newPoint.substract(this.initOffset);

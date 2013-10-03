@@ -133,6 +133,7 @@ var ClipWall;
         };
 
         ClickMode.prototype.updateSelections = function () {
+            console.log('called');
             this.removeLastIfNotSelected();
             var newPoint = new ClipWall.Point(pageXOffset, pageYOffset);
             var gap = newPoint.substract(this.initOffset);

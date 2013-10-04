@@ -292,8 +292,10 @@ var ClipWall;
             this.text = text;
             this.dom = dom;
             this.id = Content.IdGen++;
-            this.imgRatio(this.dom);
-            this.dom = this.dom.cloneNode(true);
+            if (ClipWall.u.valid(dom)) {
+                this.imgRatio(dom);
+                this.dom = dom.cloneNode(true);
+            }
         }
         Content.prototype.toString = function () {
             if (!ClipWall.u.empty(this.text)) {
@@ -316,6 +318,10 @@ var ClipWall;
         };
 
         Content.prototype.strip = function (elem) {
+            if (!ClipWall.u.valid(elem)) {
+                return false;
+            }
+
             elem.className = "";
             if (elem.style) {
                 ClipWall.g.sat(elem, "style", "");
@@ -336,6 +342,10 @@ var ClipWall;
         };
 
         Content.prototype.imgRatio = function (elem) {
+            if (!ClipWall.u.valid(elem)) {
+                return false;
+            }
+
             if (elem.tagName == "IMG") {
                 var width = elem.clientWidth || elem.offsetWidth || elem.scrollWidth;
                 var height = elem.clientHeight || elem.offsetHeight || elem.scrollHeight;
@@ -1080,10 +1090,17 @@ var ClipWall;
             if (ClipWall.g.w.getSelection) {
                 var sel = ClipWall.g.w.getSelection();
                 if (sel.rangeCount && sel.getRangeAt) {
-                    return sel.getRangeAt(0).toString();
+                    var r = sel.getRangeAt(0);
+                    var bounding = r.getBoundingClientRect();
+                    if (bounding.height * 2 < ClipWall.g.b.clientHeight && bounding.width * 2 < ClipWall.g.b.clientWidth) {
+                        return sel.getRangeAt(0).toString();
+                    }
                 }
             } else if (ClipWall.g.d.selection.createRange) {
-                return ClipWall.g.d.selection.createRange().text;
+                var tr = ClipWall.g.d.selection.createRange();
+                if (tr.boundingHeight * 2 < ClipWall.g.b.clientHeight && tr.boundingWidth * 2 < ClipWall.g.b.clientWidth) {
+                    return tr.text;
+                }
             }
 
             return '';

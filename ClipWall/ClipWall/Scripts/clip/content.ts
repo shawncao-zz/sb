@@ -11,8 +11,10 @@ module ClipWall {
         private id: number;
         constructor(private text: string= null, private dom: HTMLElement = null) {
             this.id = Content.IdGen++;
-            this.imgRatio(this.dom);
-            this.dom = <HTMLElement>this.dom.cloneNode(true);
+            if (u.valid(dom)) {
+                this.imgRatio(dom);
+                this.dom = <HTMLElement>dom.cloneNode(true);
+            }
         }
 
         public toString(): string {
@@ -36,6 +38,10 @@ module ClipWall {
         }
 
         private strip(elem: HTMLElement): boolean {
+            if (!u.valid(elem)) {
+                return false;
+            }
+
             elem.className = "";
             if (elem.style) {
                 g.sat(elem, "style", "");
@@ -56,6 +62,10 @@ module ClipWall {
         }
 
         private imgRatio(elem: HTMLElement): boolean {
+            if (!u.valid(elem)) {
+                return false;
+            }
+
             if (elem.tagName == "IMG") {
                 var width = elem.clientWidth || elem.offsetWidth || elem.scrollWidth;
                 var height = elem.clientHeight || elem.offsetHeight || elem.scrollHeight;

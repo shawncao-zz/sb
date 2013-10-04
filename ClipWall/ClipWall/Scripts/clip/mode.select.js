@@ -76,10 +76,17 @@ var ClipWall;
             if (ClipWall.g.w.getSelection) {
                 var sel = ClipWall.g.w.getSelection();
                 if (sel.rangeCount && sel.getRangeAt) {
-                    return sel.getRangeAt(0).toString();
+                    var r = sel.getRangeAt(0);
+                    var bounding = r.getBoundingClientRect();
+                    if (bounding.height * 2 < ClipWall.g.b.clientHeight && bounding.width * 2 < ClipWall.g.b.clientWidth) {
+                        return sel.getRangeAt(0).toString();
+                    }
                 }
             } else if (ClipWall.g.d.selection.createRange) {
-                return ClipWall.g.d.selection.createRange().text;
+                var tr = ClipWall.g.d.selection.createRange();
+                if (tr.boundingHeight * 2 < ClipWall.g.b.clientHeight && tr.boundingWidth * 2 < ClipWall.g.b.clientWidth) {
+                    return tr.text;
+                }
             }
 
             return '';

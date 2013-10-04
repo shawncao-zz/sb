@@ -7,8 +7,10 @@ var ClipWall;
             this.text = text;
             this.dom = dom;
             this.id = Content.IdGen++;
-            this.imgRatio(this.dom);
-            this.dom = this.dom.cloneNode(true);
+            if (ClipWall.u.valid(dom)) {
+                this.imgRatio(dom);
+                this.dom = dom.cloneNode(true);
+            }
         }
         Content.prototype.toString = function () {
             if (!ClipWall.u.empty(this.text)) {
@@ -31,6 +33,10 @@ var ClipWall;
         };
 
         Content.prototype.strip = function (elem) {
+            if (!ClipWall.u.valid(elem)) {
+                return false;
+            }
+
             elem.className = "";
             if (elem.style) {
                 ClipWall.g.sat(elem, "style", "");
@@ -51,6 +57,10 @@ var ClipWall;
         };
 
         Content.prototype.imgRatio = function (elem) {
+            if (!ClipWall.u.valid(elem)) {
+                return false;
+            }
+
             if (elem.tagName == "IMG") {
                 var width = elem.clientWidth || elem.offsetWidth || elem.scrollWidth;
                 var height = elem.clientHeight || elem.offsetHeight || elem.scrollHeight;

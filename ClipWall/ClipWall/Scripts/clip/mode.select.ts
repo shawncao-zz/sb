@@ -29,7 +29,7 @@ module ClipWall {
 
         private detectSelection() {
             // exclude operations on panel
-            if(!u.contains(this.panel, this.scrape.target)) {
+            if (!u.contains(this.panel, this.scrape.target)) {
                 var text = this.selectedText();
                 if (!u.empty(text)) {
                     new Content(text, null).fireAdd();
@@ -75,11 +75,18 @@ module ClipWall {
             if (g.w.getSelection) {  // all browsers, except IE before version 9
                 var sel = g.w.getSelection();
                 if (sel.rangeCount && sel.getRangeAt) {
-                    return sel.getRangeAt(0).toString();
+                    var r = sel.getRangeAt(0);
+                    var bounding = r.getBoundingClientRect();
+                    if (bounding.height * 2 < g.b.clientHeight && bounding.width * 2 < g.b.clientWidth) {
+                        return sel.getRangeAt(0).toString();
+                    }
                 }
             }
             else if (g.d.selection.createRange) { // Internet Explorer
-                return g.d.selection.createRange().text;
+                var tr = g.d.selection.createRange();
+                if (tr.boundingHeight * 2 < g.b.clientHeight && tr.boundingWidth * 2 < g.b.clientWidth) {
+                    return tr.text;
+                }
             }
 
             return '';

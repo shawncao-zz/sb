@@ -20,8 +20,18 @@ module ClipWall {
             //s.innerHTML = "<p>drag to expand it...</p>";
         }
 
+        // add identifier to it
+        g.sat(s, "data-cw", "1");
         g.b.appendChild(s);
         return s;
+    }
+
+    export function isOverlay(elem: HTMLElement): boolean {
+        if (elem) {
+            return g.gat(elem, "data-cw") === "1";
+        }
+
+        return false;
     }
 
     export function updateOverlay(

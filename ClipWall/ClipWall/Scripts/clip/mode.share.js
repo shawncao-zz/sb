@@ -18,10 +18,21 @@ var ClipWall;
             //s.innerHTML = "<p>drag to expand it...</p>";
         }
 
+        // add identifier to it
+        ClipWall.g.sat(s, "data-cw", "1");
         ClipWall.g.b.appendChild(s);
         return s;
     }
     ClipWall.createOverlay = createOverlay;
+
+    function isOverlay(elem) {
+        if (elem) {
+            return ClipWall.g.gat(elem, "data-cw") === "1";
+        }
+
+        return false;
+    }
+    ClipWall.isOverlay = isOverlay;
 
     function updateOverlay(elem, x, y, w, h) {
         if (y !== 0)

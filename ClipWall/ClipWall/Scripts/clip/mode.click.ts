@@ -149,8 +149,8 @@ module ClipWall {
         }
 
         private excludeNode(elem: HTMLElement): boolean {
-            // maybe if the element's client height/width is too big, we should exclude
-            if (!u.valid(elem) || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
+            // exclude list
+            if (!u.valid(elem) || isOverlay(elem) || elem.tagName === "IFRAME" || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
                 return true;
             }
 
@@ -163,6 +163,7 @@ module ClipWall {
                 return true;
             }
 
+            // maybe if the element's client height/width is too big, we should exclude
             return g.b.clientWidth <= elem.clientWidth * 2 || g.b.clientHeight <= elem.clientHeight * 2;
         }
     }

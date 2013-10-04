@@ -68,8 +68,9 @@
         height: 490px;
         border-right: 1px solid;
         overflow-y: scroll;
-        div {
+        >div {
             width: 100%;
+            text-align: left;
             /*height: 100px;
             overflow: scroll;
                 */

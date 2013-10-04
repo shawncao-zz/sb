@@ -144,7 +144,7 @@ var ClipWall;
         };
 
         ClickMode.prototype.excludeNode = function (elem) {
-            if (!ClipWall.u.valid(elem) || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
+            if (!ClipWall.u.valid(elem) || ClipWall.isOverlay(elem) || elem.tagName === "IFRAME" || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
                 return true;
             }
 
@@ -156,6 +156,7 @@ var ClipWall;
                 return true;
             }
 
+            // maybe if the element's client height/width is too big, we should exclude
             return ClipWall.g.b.clientWidth <= elem.clientWidth * 2 || ClipWall.g.b.clientHeight <= elem.clientHeight * 2;
         };
         ClickMode.Name = "m_clk";

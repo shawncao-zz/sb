@@ -292,6 +292,8 @@ var ClipWall;
             this.text = text;
             this.dom = dom;
             this.id = Content.IdGen++;
+            this.imgRatio(this.dom);
+            this.dom = this.dom.cloneNode(true);
         }
         Content.prototype.toString = function () {
             if (!ClipWall.u.empty(this.text)) {
@@ -319,7 +321,32 @@ var ClipWall;
                 ClipWall.g.sat(elem, "style", "");
             }
 
+            if (elem.tagName == "IMG") {
+                var ratio = ClipWall.g.gat(elem, "data-ratio");
+                if (ClipWall.u.valid(ratio)) {
+                    ClipWall.g.sat(elem, "width", "250px");
+                    ClipWall.g.sat(elem, "height", parseFloat(ratio) * 250 + "px");
+                }
+
+                return false;
+            }
+
             ClipWall.u.eachKid(elem, this.strip);
+            return false;
+        };
+
+        Content.prototype.imgRatio = function (elem) {
+            if (elem.tagName == "IMG") {
+                var width = elem.clientWidth || elem.offsetWidth || elem.scrollWidth;
+                var height = elem.clientHeight || elem.offsetHeight || elem.scrollHeight;
+                if (width > 250) {
+                    ClipWall.g.sat(elem, "data-ratio", "" + (height / width));
+                }
+
+                return false;
+            }
+
+            ClipWall.u.eachKid(elem, this.imgRatio);
             return false;
         };
 
@@ -472,10 +499,21 @@ var ClipWall;
             //s.innerHTML = "<p>drag to expand it...</p>";
         }
 
+        // add identifier to it
+        ClipWall.g.sat(s, "data-cw", "1");
         ClipWall.g.b.appendChild(s);
         return s;
     }
     ClipWall.createOverlay = createOverlay;
+
+    function isOverlay(elem) {
+        if (elem) {
+            return ClipWall.g.gat(elem, "data-cw") === "1";
+        }
+
+        return false;
+    }
+    ClipWall.isOverlay = isOverlay;
 
     function updateOverlay(elem, x, y, w, h) {
         if (y !== 0)
@@ -786,7 +824,7 @@ var ClipWall;
         };
 
         ClickMode.prototype.excludeNode = function (elem) {
-            if (!ClipWall.u.valid(elem) || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
+            if (!ClipWall.u.valid(elem) || ClipWall.isOverlay(elem) || elem.tagName === "IFRAME" || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
                 return true;
             }
 
@@ -798,6 +836,7 @@ var ClipWall;
                 return true;
             }
 
+            // maybe if the element's client height/width is too big, we should exclude
             return ClipWall.g.b.clientWidth <= elem.clientWidth * 2 || ClipWall.g.b.clientHeight <= elem.clientHeight * 2;
         };
         ClickMode.Name = "m_clk";

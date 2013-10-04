@@ -50,6 +50,7 @@ module ClipWall {
         public apply(): void {
             this.initOffset = new Point(g.w.pageXOffset, g.w.pageYOffset);
             this.hook(true);
+            e.be(g.w, "scroll", this.scroll);
         }
 
         public dispose(): void {
@@ -59,7 +60,6 @@ module ClipWall {
         private hook(bind: boolean) {
             var handle = bind ? e.be : e.ue;
             handle(g.b, "mouseover", this.mouseOver);
-            handle(g.w, "scroll", this.scroll);
             u.mouseselect(g.b, bind);
         }
 
@@ -69,10 +69,8 @@ module ClipWall {
                 return;
             }
 
-            if (g.b.clientWidth <= (target.clientWidth + 10)
-                || g.b.clientHeight <= (target.clientHeight + 10)
-                || u.empty(target.innerText)
-                || this.onlyDivChildren(target)) {
+            // filter some noises, need tune
+            if (this.excludeNode(target)) {
                 this.removeLastIfNotSelected();
                 return;
             }
@@ -103,7 +101,7 @@ module ClipWall {
                 if (this.lastFocus && this.lastFocus.key == overlay) {
                     this.removeChildren(this.lastFocus.value);
                     this.selections.add(this.lastFocus.key, this.lastFocus.value);
-                    e.fire("addcontent", this.lastFocus.value.innerHTML);
+                    new Content(null, this.lastFocus.value).fireAdd();
                 }
             } else {
                 this.removeSelection(overlay);
@@ -140,7 +138,6 @@ module ClipWall {
         }
 
         private updateSelections(): void {
-            console.log('called');
             this.removeLastIfNotSelected();
             var newPoint = new Point(pageXOffset, pageYOffset);
             var gap = newPoint.substract(this.initOffset);
@@ -151,22 +148,22 @@ module ClipWall {
             }
         }
 
-        private onlyDivChildren(elem: HTMLElement): boolean {
-            if (elem.childElementCount == 0) {
-                return false;
-            }
-
-            if (elem.childElementCount > 10) {
+        private excludeNode(elem: HTMLElement): boolean {
+            // maybe if the element's client height/width is too big, we should exclude
+            if (!u.valid(elem) || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
                 return true;
             }
 
-            for (var i = 0; i < elem.children.length; i++) {
-                if (elem.children.item(i).tagName !== "DIV") {
-                    return false;
-                }
+            // image excluded, what about background image? css image
+            if (elem.tagName === "IMG" || u.textNode(elem)) {
+                return false;
             }
 
-            return true;
+            if (u.eachKid(elem, this.excludeNode)) {
+                return true;
+            }
+
+            return g.b.clientWidth <= elem.clientWidth * 2 || g.b.clientHeight <= elem.clientHeight * 2;
         }
     }
 }

@@ -1,3 +1,4 @@
+/// <reference path="content.ts" />
 var ClipWall;
 (function (ClipWall) {
     var Panel = (function () {
@@ -18,8 +19,8 @@ var ClipWall;
                 ClipWall.g.sat(items[i], "onclick", "panel.mc(this);");
             }
 
-            ClipWall.e.bind("addcontent", function (args) {
-                ClipWall.g.ge("cnt").appendChild(_this.newNode(args[0]));
+            ClipWall.e.bind(ClipWall.Content.CADD, function (args) {
+                _this.newNode(args[0]);
             });
 
             // create default mode
@@ -30,21 +31,21 @@ var ClipWall;
         };
 
         Panel.prototype.newNode = function (content) {
+            if (!ClipWall.u.valid(content)) {
+                return;
+            }
+
             var div = ClipWall.g.ce("div");
-            div.innerHTML = content;
-            return div;
+            div.innerHTML = content.toString();
+            ClipWall.g.ge("cnt").appendChild(div);
         };
 
         Panel.prototype.createMode = function () {
-            // use one clip mode for default
-            var mode = new ClipWall.SelectMode(this.panel);
-            mode.apply();
-            this.modes.push(mode);
+            this.modes.push(new ClipWall.SelectMode(this.panel));
+            this.modes.push(new ClipWall.ClickMode(this.panel));
 
-            // other modes push to the collection
-            var cm = new ClipWall.ClickMode(this.panel);
-            cm.apply();
-            this.modes.push(cm);
+            // use one clip mode for default
+            this.modes[0].apply();
         };
 
         Panel.prototype.mc = function (item) {

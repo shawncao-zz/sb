@@ -118,9 +118,10 @@
 }
 /* line 115, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .panel li {
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
+  padding: 0;
 }
-/* line 117, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
+/* line 118, D:/ClipWall/sb/ClipWall/ClipWall/Content/clip/clip.scss */
 .panel li:hover {
   cursor: pointer;
 }

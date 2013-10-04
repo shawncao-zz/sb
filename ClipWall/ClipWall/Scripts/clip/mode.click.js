@@ -47,6 +47,7 @@ var ClipWall;
         ClickMode.prototype.apply = function () {
             this.initOffset = new ClipWall.Point(ClipWall.g.w.pageXOffset, ClipWall.g.w.pageYOffset);
             this.hook(true);
+            ClipWall.e.be(ClipWall.g.w, "scroll", this.scroll);
         };
 
         ClickMode.prototype.dispose = function () {
@@ -56,7 +57,6 @@ var ClipWall;
         ClickMode.prototype.hook = function (bind) {
             var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
             handle(ClipWall.g.b, "mouseover", this.mouseOver);
-            handle(ClipWall.g.w, "scroll", this.scroll);
             ClipWall.u.mouseselect(ClipWall.g.b, bind);
         };
 
@@ -65,7 +65,7 @@ var ClipWall;
                 return;
             }
 
-            if (ClipWall.g.b.clientWidth <= (target.clientWidth + 10) || ClipWall.g.b.clientHeight <= (target.clientHeight + 10) || ClipWall.u.empty(target.innerText) || this.onlyDivChildren(target)) {
+            if (this.excludeNode(target)) {
                 this.removeLastIfNotSelected();
                 return;
             }
@@ -96,7 +96,7 @@ var ClipWall;
                 if (this.lastFocus && this.lastFocus.key == overlay) {
                     this.removeChildren(this.lastFocus.value);
                     this.selections.add(this.lastFocus.key, this.lastFocus.value);
-                    ClipWall.e.fire("addcontent", this.lastFocus.value.innerHTML);
+                    new ClipWall.Content(null, this.lastFocus.value).fireAdd();
                 }
             } else {
                 this.removeSelection(overlay);
@@ -133,7 +133,6 @@ var ClipWall;
         };
 
         ClickMode.prototype.updateSelections = function () {
-            console.log('called');
             this.removeLastIfNotSelected();
             var newPoint = new ClipWall.Point(pageXOffset, pageYOffset);
             var gap = newPoint.substract(this.initOffset);
@@ -144,22 +143,20 @@ var ClipWall;
             }
         };
 
-        ClickMode.prototype.onlyDivChildren = function (elem) {
-            if (elem.childElementCount == 0) {
-                return false;
-            }
-
-            if (elem.childElementCount > 10) {
+        ClickMode.prototype.excludeNode = function (elem) {
+            if (!ClipWall.u.valid(elem) || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
                 return true;
             }
 
-            for (var i = 0; i < elem.children.length; i++) {
-                if (elem.children.item(i).tagName !== "DIV") {
-                    return false;
-                }
+            if (elem.tagName === "IMG" || ClipWall.u.textNode(elem)) {
+                return false;
             }
 
-            return true;
+            if (ClipWall.u.eachKid(elem, this.excludeNode)) {
+                return true;
+            }
+
+            return ClipWall.g.b.clientWidth <= elem.clientWidth * 2 || ClipWall.g.b.clientHeight <= elem.clientHeight * 2;
         };
         ClickMode.Name = "m_clk";
         return ClickMode;

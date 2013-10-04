@@ -1,4 +1,4 @@
-
+/// <reference path="content.ts" />
 module ClipWall {
     export class Panel {
         private modes: IClipMode[] = [];
@@ -30,30 +30,29 @@ module ClipWall {
                 g.sat(<HTMLElement>items[i], "onclick", "panel.mc(this);");
             }
 
-            e.bind("addcontent", (args) => {
-                g.ge("cnt").appendChild(this.newNode(args[0]));
+            e.bind(Content.CADD, (args) => {
+                this.newNode(<Content>args[0]);
             });
 
             // create default mode
             this.createMode();
         }
 
-        private newNode(content): HTMLElement {
+        private newNode(content: Content): void {
+            if (!u.valid(content)) {
+                return;
+            }
+
             var div = g.ce("div");
-            div.innerHTML = content;
-            return div;
+            div.innerHTML = content.toString();
+            g.ge("cnt").appendChild(div);
         }
 
         private createMode() {
+            this.modes.push(new SelectMode(this.panel));
+            this.modes.push(new ClickMode(this.panel));
             // use one clip mode for default
-            var mode: IClipMode = new ClipWall.SelectMode(this.panel);
-            mode.apply();
-            this.modes.push(mode);
-
-            // other modes push to the collection
-            var cm = new ClipWall.ClickMode(this.panel);
-            cm.apply();
-            this.modes.push(cm);
+            this.modes[0].apply();
         }
 
         private mc(item: HTMLElement) {

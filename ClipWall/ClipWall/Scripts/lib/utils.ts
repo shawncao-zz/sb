@@ -3,7 +3,7 @@ module ClipWall {
     //define utlity
     export module u {
         export function evt(e: Event) {
-            var event = e || ClipWall.g.w.event;
+            var event = e || g.w.event;
             if (!event.target) {
                 event.target = event.srcElement;
             }
@@ -12,7 +12,7 @@ module ClipWall {
         }
 
         export function fullpath(rel: string): string {
-            return ClipWall.g.h + rel;
+            return g.h + rel;
         }
 
         export function contains(elem1: HTMLElement, elem2: HTMLElement): boolean {
@@ -55,7 +55,24 @@ module ClipWall {
         }
 
         export function valid(obj: any): boolean {
-            return (obj !== null &&  typeof obj !== "undefined");
+            return (obj !== null && typeof obj !== "undefined");
+        }
+
+        export function textNode(node: Element): boolean {
+            return valid(node) && node.nodeType === 3;
+        }
+
+        export function eachKid(dom: HTMLElement, exec: (kid: HTMLElement) => any): any {
+            if (u.valid(dom) && u.valid(exec)) {
+                for (var i = 0; i < dom.children.length; ++i) {
+                    var result = exec(<HTMLElement>dom.children.item(i));
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return false;
         }
 
         export function mouseselect(target: any, disable: boolean) {

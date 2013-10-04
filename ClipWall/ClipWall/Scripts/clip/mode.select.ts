@@ -32,7 +32,7 @@ module ClipWall {
             if(!u.contains(this.panel, this.scrape.target)) {
                 var text = this.selectedText();
                 if (!u.empty(text)) {
-                    e.fire("addcontent", text, this.scrape.target);
+                    new Content(text, null).fireAdd();
                     this.highlight('yellow');
                 }
             }

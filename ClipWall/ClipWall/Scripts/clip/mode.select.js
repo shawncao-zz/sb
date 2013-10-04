@@ -35,7 +35,7 @@ var ClipWall;
             if (!ClipWall.u.contains(this.panel, this.scrape.target)) {
                 var text = this.selectedText();
                 if (!ClipWall.u.empty(text)) {
-                    ClipWall.e.fire("addcontent", text, this.scrape.target);
+                    new ClipWall.Content(text, null).fireAdd();
                     this.highlight('yellow');
                 }
             }

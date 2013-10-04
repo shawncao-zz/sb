@@ -70,6 +70,25 @@ var ClipWall;
         }
         u.valid = valid;
 
+        function textNode(node) {
+            return valid(node) && node.nodeType === 3;
+        }
+        u.textNode = textNode;
+
+        function eachKid(dom, exec) {
+            if (u.valid(dom) && u.valid(exec)) {
+                for (var i = 0; i < dom.children.length; ++i) {
+                    var result = exec(dom.children.item(i));
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return false;
+        }
+        u.eachKid = eachKid;
+
         function mouseselect(target, disable) {
             if (typeof target.onselectstart != "undefined")
                 target.onselectstart = disable ? function () {

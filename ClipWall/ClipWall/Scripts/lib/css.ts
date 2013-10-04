@@ -5,11 +5,11 @@
 module ClipWall {
     export module Css {
         export function load(path: string): void {
-            var s = ClipWall.g.ce('link');
-            ClipWall.g.sat(s, 'type', 'text/css');
-            ClipWall.g.sat(s, 'rel', 'stylesheet');
-            ClipWall.g.sat(s, 'href', ClipWall.u.fullpath(path));
-            ClipWall.g.gt('body')[0].appendChild(s);
+            var s = g.ce('link');
+            g.sat(s, 'type', 'text/css');
+            g.sat(s, 'rel', 'stylesheet');
+            g.sat(s, 'href', u.fullpath(path));
+            g.gt('body')[0].appendChild(s);
         }
         export function add(elem: HTMLElement, className: string): void {
             if (contains(elem, className)) {

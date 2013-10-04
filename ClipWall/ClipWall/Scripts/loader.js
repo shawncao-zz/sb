@@ -191,6 +191,25 @@ var ClipWall;
         }
         u.valid = valid;
 
+        function textNode(node) {
+            return valid(node) && node.nodeType === 3;
+        }
+        u.textNode = textNode;
+
+        function eachKid(dom, exec) {
+            if (u.valid(dom) && u.valid(exec)) {
+                for (var i = 0; i < dom.children.length; ++i) {
+                    var result = exec(dom.children.item(i));
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+
+            return false;
+        }
+        u.eachKid = eachKid;
+
         function mouseselect(target, disable) {
             if (typeof target.onselectstart != "undefined")
                 target.onselectstart = disable ? function () {
@@ -266,6 +285,62 @@ var ClipWall;
 })(ClipWall || (ClipWall = {}));
 var ClipWall;
 (function (ClipWall) {
+    var Content = (function () {
+        function Content(text, dom) {
+            if (typeof text === "undefined") { text = null; }
+            if (typeof dom === "undefined") { dom = null; }
+            this.text = text;
+            this.dom = dom;
+            this.id = Content.IdGen++;
+        }
+        Content.prototype.toString = function () {
+            if (!ClipWall.u.empty(this.text)) {
+                return this.text;
+            }
+
+            if (ClipWall.u.valid(this.dom)) {
+                // strip styles to make it consistent display
+                // before stripping, clone it to a new node
+                this.strip(this.dom);
+
+                if (this.dom.tagName == "IMG") {
+                    return this.dom.outerHTML;
+                } else {
+                    return this.dom.innerHTML;
+                }
+            }
+
+            return "";
+        };
+
+        Content.prototype.strip = function (elem) {
+            elem.className = "";
+            if (elem.style) {
+                ClipWall.g.sat(elem, "style", "");
+            }
+
+            ClipWall.u.eachKid(elem, this.strip);
+            return false;
+        };
+
+        Content.prototype.fireAdd = function () {
+            ClipWall.e.fire(Content.CADD, this);
+        };
+
+        Content.prototype.fireDel = function () {
+            ClipWall.e.fire(Content.CDEL, this.id);
+        };
+        Content.CADD = "addcontent";
+        Content.CDEL = "removecontent";
+
+        Content.IdGen = 0;
+        return Content;
+    })();
+    ClipWall.Content = Content;
+})(ClipWall || (ClipWall = {}));
+/// <reference path="content.ts" />
+var ClipWall;
+(function (ClipWall) {
     var Panel = (function () {
         function Panel() {
             var _this = this;
@@ -284,8 +359,8 @@ var ClipWall;
                 ClipWall.g.sat(items[i], "onclick", "panel.mc(this);");
             }
 
-            ClipWall.e.bind("addcontent", function (args) {
-                ClipWall.g.ge("cnt").appendChild(_this.newNode(args[0]));
+            ClipWall.e.bind(ClipWall.Content.CADD, function (args) {
+                _this.newNode(args[0]);
             });
 
             // create default mode
@@ -296,21 +371,21 @@ var ClipWall;
         };
 
         Panel.prototype.newNode = function (content) {
+            if (!ClipWall.u.valid(content)) {
+                return;
+            }
+
             var div = ClipWall.g.ce("div");
-            div.innerHTML = content;
-            return div;
+            div.innerHTML = content.toString();
+            ClipWall.g.ge("cnt").appendChild(div);
         };
 
         Panel.prototype.createMode = function () {
-            // use one clip mode for default
-            var mode = new ClipWall.SelectMode(this.panel);
-            mode.apply();
-            this.modes.push(mode);
+            this.modes.push(new ClipWall.SelectMode(this.panel));
+            this.modes.push(new ClipWall.ClickMode(this.panel));
 
-            // other modes push to the collection
-            var cm = new ClipWall.ClickMode(this.panel);
-            cm.apply();
-            this.modes.push(cm);
+            // use one clip mode for default
+            this.modes[0].apply();
         };
 
         Panel.prototype.mc = function (item) {
@@ -614,6 +689,7 @@ var ClipWall;
         ClickMode.prototype.apply = function () {
             this.initOffset = new ClipWall.Point(ClipWall.g.w.pageXOffset, ClipWall.g.w.pageYOffset);
             this.hook(true);
+            ClipWall.e.be(ClipWall.g.w, "scroll", this.scroll);
         };
 
         ClickMode.prototype.dispose = function () {
@@ -623,7 +699,6 @@ var ClipWall;
         ClickMode.prototype.hook = function (bind) {
             var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
             handle(ClipWall.g.b, "mouseover", this.mouseOver);
-            handle(ClipWall.g.w, "scroll", this.scroll);
             ClipWall.u.mouseselect(ClipWall.g.b, bind);
         };
 
@@ -632,7 +707,7 @@ var ClipWall;
                 return;
             }
 
-            if (ClipWall.g.b.clientWidth <= (target.clientWidth + 10) || ClipWall.g.b.clientHeight <= (target.clientHeight + 10) || ClipWall.u.empty(target.innerText) || this.onlyDivChildren(target)) {
+            if (this.excludeNode(target)) {
                 this.removeLastIfNotSelected();
                 return;
             }
@@ -663,7 +738,7 @@ var ClipWall;
                 if (this.lastFocus && this.lastFocus.key == overlay) {
                     this.removeChildren(this.lastFocus.value);
                     this.selections.add(this.lastFocus.key, this.lastFocus.value);
-                    ClipWall.e.fire("addcontent", this.lastFocus.value.innerHTML);
+                    new ClipWall.Content(null, this.lastFocus.value).fireAdd();
                 }
             } else {
                 this.removeSelection(overlay);
@@ -700,7 +775,6 @@ var ClipWall;
         };
 
         ClickMode.prototype.updateSelections = function () {
-            console.log('called');
             this.removeLastIfNotSelected();
             var newPoint = new ClipWall.Point(pageXOffset, pageYOffset);
             var gap = newPoint.substract(this.initOffset);
@@ -711,22 +785,20 @@ var ClipWall;
             }
         };
 
-        ClickMode.prototype.onlyDivChildren = function (elem) {
-            if (elem.childElementCount == 0) {
-                return false;
-            }
-
-            if (elem.childElementCount > 10) {
+        ClickMode.prototype.excludeNode = function (elem) {
+            if (!ClipWall.u.valid(elem) || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
                 return true;
             }
 
-            for (var i = 0; i < elem.children.length; i++) {
-                if (elem.children.item(i).tagName !== "DIV") {
-                    return false;
-                }
+            if (elem.tagName === "IMG" || ClipWall.u.textNode(elem)) {
+                return false;
             }
 
-            return true;
+            if (ClipWall.u.eachKid(elem, this.excludeNode)) {
+                return true;
+            }
+
+            return ClipWall.g.b.clientWidth <= elem.clientWidth * 2 || ClipWall.g.b.clientHeight <= elem.clientHeight * 2;
         };
         ClickMode.Name = "m_clk";
         return ClickMode;
@@ -928,7 +1000,7 @@ var ClipWall;
             if (!ClipWall.u.contains(this.panel, this.scrape.target)) {
                 var text = this.selectedText();
                 if (!ClipWall.u.empty(text)) {
-                    ClipWall.e.fire("addcontent", text, this.scrape.target);
+                    new ClipWall.Content(text, null).fireAdd();
                     this.highlight('yellow');
                 }
             }

@@ -79,17 +79,16 @@ module ClipWall {
                 return;
             }
 
+            // create new overlay to cover the target
             if (!u.valid(this.lastFocus)) {
                 this.lastFocus = new c.KeyValuePair(this.greyout(target), target);
                 return;
             }
 
-            if (target != this.lastFocus.value) {
-                this.removeLastIfNotSelected();
-
-                if (!this.selections.containsValue(target)) {
-                    this.lastFocus = new c.KeyValuePair(this.greyout(target), target);
-                }
+            // update existing overlay to cover new target
+            if (target != this.lastFocus.value && !this.selections.containsValue(target)) {
+                cover(this.lastFocus.key, target);
+                this.lastFocus.value = target;                
             }
         }
 
@@ -97,7 +96,7 @@ module ClipWall {
             var s = createOverlay(target);
             this.overlays.add(s);
             e.be(s, "click", this.mouseClick);
-            e.be(s, "mouseout", this.removeLastIfNotSelected);
+            //e.be(s, "mouseout", this.removeLastIfNotSelected);
             return s;
         }
 
@@ -125,6 +124,7 @@ module ClipWall {
                         this.removeChildren(this.lastFocus.value);
                         this.selections.add(this.lastFocus.key, this.lastFocus.value);
                         new Content(null, this.lastFocus.value).fireAdd();
+                        this.lastFocus = null;
                     }
                 }
             } else {

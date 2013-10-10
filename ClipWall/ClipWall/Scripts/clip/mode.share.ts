@@ -7,16 +7,8 @@ module ClipWall {
         if (under === g.b) {
             g.sat(s, 'class', 'greyout');
         } else {
-            var rect = { top: 0, left: 0, width: 0, height: 0 };
-            if (u.valid(under)) {
-                rect = under.getBoundingClientRect();
-            }
             g.sat(s, 'class', 'overlay');
-            g.sat(s, 'style', u.format(greyoutPattern,
-                rect.top.toString(),
-                rect.left.toString(),
-                rect.width.toString(),
-                rect.height.toString()));
+            cover(s, under);
             //s.innerHTML = "<p>drag to expand it...</p>";
         }
 
@@ -24,6 +16,19 @@ module ClipWall {
         g.sat(s, "data-cw", "1");
         g.b.appendChild(s);
         return s;
+    }
+
+    export function cover(overlay: HTMLElement, under: HTMLElement) {
+        var rect = { top: 0, left: 0, width: 0, height: 0 };
+        if (u.valid(under)) {
+            rect = under.getBoundingClientRect();
+        }
+
+        g.sat(overlay, 'style', u.format(greyoutPattern,
+            rect.top.toString(),
+            rect.left.toString(),
+            rect.width.toString(),
+            rect.height.toString()));
     }
 
     export function isOverlay(elem: HTMLElement): boolean {

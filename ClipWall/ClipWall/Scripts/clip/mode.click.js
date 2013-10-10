@@ -81,12 +81,9 @@ var ClipWall;
                 return;
             }
 
-            if (target != this.lastFocus.value) {
-                this.removeLastIfNotSelected();
-
-                if (!this.selections.containsValue(target)) {
-                    this.lastFocus = new ClipWall.c.KeyValuePair(this.greyout(target), target);
-                }
+            if (target != this.lastFocus.value && !this.selections.containsValue(target)) {
+                ClipWall.cover(this.lastFocus.key, target);
+                this.lastFocus.value = target;
             }
         };
 
@@ -94,7 +91,8 @@ var ClipWall;
             var s = ClipWall.createOverlay(target);
             this.overlays.add(s);
             ClipWall.e.be(s, "click", this.mouseClick);
-            ClipWall.e.be(s, "mouseout", this.removeLastIfNotSelected);
+
+            //e.be(s, "mouseout", this.removeLastIfNotSelected);
             return s;
         };
 
@@ -121,6 +119,7 @@ var ClipWall;
                         this.removeChildren(this.lastFocus.value);
                         this.selections.add(this.lastFocus.key, this.lastFocus.value);
                         new ClipWall.Content(null, this.lastFocus.value).fireAdd();
+                        this.lastFocus = null;
                     }
                 }
             } else {

@@ -23,18 +23,19 @@ module ClipWall {
         constructor(private panel: HTMLElement) {
             this.mouseOver = (e) => {
                 if (!this.moflag) {
+                    console.log('is this useful?');
                     return;
                 }
 
                 this.moflag = false;
-                g.st(() => { this.moflag = true; }, 300);
+                g.st(() => { this.moflag = true; }, 200);
 
                 this.overTarget(<HTMLElement>u.evt(e).target);
                 u.stop(e);
             };
 
             this.mouseClick = (e) => {
-                this.clickOverlay(<HTMLElement>u.evt(e).target);
+                this.clickOverlay(<MouseEvent>e);
                 u.stop(e);
             };
 
@@ -60,10 +61,13 @@ module ClipWall {
         private hook(bind: boolean) {
             var handle = bind ? e.be : e.ue;
             handle(g.b, "mouseover", this.mouseOver);
+            handle(g.b, "contextmenu", this.mouseClick);
+            // handle(g.b, "mousemove", this.mouseMove);
             u.mouseselect(g.b, bind);
         }
 
         private overTarget(target: HTMLElement): void {
+            console.log('over: ' + target.tagName + '|x:' + target.offsetLeft + '|y:' + target.offsetTop);
             // keep last focus
             if (this.lastFocus && u.contains(this.lastFocus.value, target)) {
                 return;
@@ -93,15 +97,35 @@ module ClipWall {
             var s = createOverlay(target);
             this.overlays.add(s);
             e.be(s, "click", this.mouseClick);
+            e.be(s, "mouseout", this.removeLastIfNotSelected);
             return s;
         }
 
-        private clickOverlay(overlay: HTMLElement): void {
+        private clickOverlay(event: MouseEvent): void {
+            if (!u.valid(event)) {
+                return;
+            }
+
+            var overlay = <HTMLElement>u.evt(event).target;
+            if (event.button === 2) { // right button
+                var lastTarget = u.valid(this.lastFocus) ? this.lastFocus.value : null;
+                if (u.valid(overlay) && overlay !== lastTarget) {
+                    this.overTarget(overlay);
+                }
+            }
+
+            if (!isOverlay(overlay)) {
+                return;
+            }
+
             if (!this.selections.containsKey(overlay)) {
                 if (this.lastFocus && this.lastFocus.key == overlay) {
-                    this.removeChildren(this.lastFocus.value);
-                    this.selections.add(this.lastFocus.key, this.lastFocus.value);
-                    new Content(null, this.lastFocus.value).fireAdd();
+                    // left button
+                    if (event.button === 0) {
+                        this.removeChildren(this.lastFocus.value);
+                        this.selections.add(this.lastFocus.key, this.lastFocus.value);
+                        new Content(null, this.lastFocus.value).fireAdd();
+                    }
                 }
             } else {
                 this.removeSelection(overlay);
@@ -150,7 +174,11 @@ module ClipWall {
 
         private excludeNode(elem: HTMLElement): boolean {
             // exclude list
-            if (!u.valid(elem) || isOverlay(elem) || elem.tagName === "IFRAME" || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
+            if (!u.valid(elem) || isOverlay(elem) || elem.tagName === "IFRAME" || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT" || elem.tagName === "TEXTAREA") {
+                return true;
+            }
+
+            if (u.eachKid(elem, this.excludeNode)) {
                 return true;
             }
 
@@ -159,12 +187,8 @@ module ClipWall {
                 return false;
             }
 
-            if (u.eachKid(elem, this.excludeNode)) {
-                return true;
-            }
-
             // maybe if the element's client height/width is too big, we should exclude
-            return g.b.clientWidth <= elem.clientWidth * 2 || g.b.clientHeight <= elem.clientHeight * 2;
+            return u.width(g.b) <= u.width(elem) * 2 || u.height(g.b) <= u.height(elem) * 2;
         }
     }
 }

@@ -13,6 +13,16 @@ var ClipWall;
         }
         u.evt = evt;
 
+        function cord(e) {
+            var event = (e || ClipWall.g.w.event);
+            if (event) {
+                return new ClipWall.Point(event.pageX, event.pageY);
+            }
+
+            return null;
+        }
+        u.cord = cord;
+
         function fullpath(rel) {
             return ClipWall.g.h + rel;
         }
@@ -98,6 +108,16 @@ else if (typeof target.style.MozUserSelect != "undefined")
                 target.style.MozUserSelect = disable ? "none" : null;
         }
         u.mouseselect = mouseselect;
+
+        function width(elem) {
+            return elem.offsetWidth | elem.clientWidth | elem.scrollWidth;
+        }
+        u.width = width;
+
+        function height(elem) {
+            return elem.offsetHeight | elem.clientHeight | elem.scrollHeight;
+        }
+        u.height = height;
     })(ClipWall.u || (ClipWall.u = {}));
     var u = ClipWall.u;
 })(ClipWall || (ClipWall = {}));

@@ -15,20 +15,21 @@ var ClipWall;
             this.moflag = true;
             this.mouseOver = function (e) {
                 if (!_this.moflag) {
+                    console.log('is this useful?');
                     return;
                 }
 
                 _this.moflag = false;
                 ClipWall.g.st(function () {
                     _this.moflag = true;
-                }, 300);
+                }, 200);
 
                 _this.overTarget(ClipWall.u.evt(e).target);
                 ClipWall.u.stop(e);
             };
 
             this.mouseClick = function (e) {
-                _this.clickOverlay(ClipWall.u.evt(e).target);
+                _this.clickOverlay(e);
                 ClipWall.u.stop(e);
             };
 
@@ -57,10 +58,15 @@ var ClipWall;
         ClickMode.prototype.hook = function (bind) {
             var handle = bind ? ClipWall.e.be : ClipWall.e.ue;
             handle(ClipWall.g.b, "mouseover", this.mouseOver);
+            handle(ClipWall.g.b, "contextmenu", this.mouseClick);
+
+            // handle(g.b, "mousemove", this.mouseMove);
             ClipWall.u.mouseselect(ClipWall.g.b, bind);
         };
 
         ClickMode.prototype.overTarget = function (target) {
+            console.log('over: ' + target.tagName + '|x:' + target.offsetLeft + '|y:' + target.offsetTop);
+
             if (this.lastFocus && ClipWall.u.contains(this.lastFocus.value, target)) {
                 return;
             }
@@ -88,15 +94,34 @@ var ClipWall;
             var s = ClipWall.createOverlay(target);
             this.overlays.add(s);
             ClipWall.e.be(s, "click", this.mouseClick);
+            ClipWall.e.be(s, "mouseout", this.removeLastIfNotSelected);
             return s;
         };
 
-        ClickMode.prototype.clickOverlay = function (overlay) {
+        ClickMode.prototype.clickOverlay = function (event) {
+            if (!ClipWall.u.valid(event)) {
+                return;
+            }
+
+            var overlay = ClipWall.u.evt(event).target;
+            if (event.button === 2) {
+                var lastTarget = ClipWall.u.valid(this.lastFocus) ? this.lastFocus.value : null;
+                if (ClipWall.u.valid(overlay) && overlay !== lastTarget) {
+                    this.overTarget(overlay);
+                }
+            }
+
+            if (!ClipWall.isOverlay(overlay)) {
+                return;
+            }
+
             if (!this.selections.containsKey(overlay)) {
                 if (this.lastFocus && this.lastFocus.key == overlay) {
-                    this.removeChildren(this.lastFocus.value);
-                    this.selections.add(this.lastFocus.key, this.lastFocus.value);
-                    new ClipWall.Content(null, this.lastFocus.value).fireAdd();
+                    if (event.button === 0) {
+                        this.removeChildren(this.lastFocus.value);
+                        this.selections.add(this.lastFocus.key, this.lastFocus.value);
+                        new ClipWall.Content(null, this.lastFocus.value).fireAdd();
+                    }
                 }
             } else {
                 this.removeSelection(overlay);
@@ -144,7 +169,11 @@ var ClipWall;
         };
 
         ClickMode.prototype.excludeNode = function (elem) {
-            if (!ClipWall.u.valid(elem) || ClipWall.isOverlay(elem) || elem.tagName === "IFRAME" || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT") {
+            if (!ClipWall.u.valid(elem) || ClipWall.isOverlay(elem) || elem.tagName === "IFRAME" || elem.tagName === "FORM" || elem.tagName === "INPUT" || elem.tagName === "SELECT" || elem.tagName === "TEXTAREA") {
+                return true;
+            }
+
+            if (ClipWall.u.eachKid(elem, this.excludeNode)) {
                 return true;
             }
 
@@ -152,12 +181,8 @@ var ClipWall;
                 return false;
             }
 
-            if (ClipWall.u.eachKid(elem, this.excludeNode)) {
-                return true;
-            }
-
             // maybe if the element's client height/width is too big, we should exclude
-            return ClipWall.g.b.clientWidth <= elem.clientWidth * 2 || ClipWall.g.b.clientHeight <= elem.clientHeight * 2;
+            return ClipWall.u.width(ClipWall.g.b) <= ClipWall.u.width(elem) * 2 || ClipWall.u.height(ClipWall.g.b) <= ClipWall.u.height(elem) * 2;
         };
         ClickMode.Name = "m_clk";
         return ClickMode;

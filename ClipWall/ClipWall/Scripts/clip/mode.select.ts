@@ -77,14 +77,14 @@ module ClipWall {
                 if (sel.rangeCount && sel.getRangeAt) {
                     var r = sel.getRangeAt(0);
                     var bounding = r.getBoundingClientRect();
-                    if (bounding.height * 2 < g.b.clientHeight && bounding.width * 2 < g.b.clientWidth) {
+                    if (bounding.height * 2 < u.height(g.b) && bounding.width * 2 < u.width(g.b)) {
                         return sel.getRangeAt(0).toString();
                     }
                 }
             }
             else if (g.d.selection.createRange) { // Internet Explorer
                 var tr = g.d.selection.createRange();
-                if (tr.boundingHeight * 2 < g.b.clientHeight && tr.boundingWidth * 2 < g.b.clientWidth) {
+                if (tr.boundingHeight * 2 < u.height(g.b) && tr.boundingWidth * 2 < u.width(g.b)) {
                     return tr.text;
                 }
             }

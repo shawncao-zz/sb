@@ -78,13 +78,13 @@ var ClipWall;
                 if (sel.rangeCount && sel.getRangeAt) {
                     var r = sel.getRangeAt(0);
                     var bounding = r.getBoundingClientRect();
-                    if (bounding.height * 2 < ClipWall.g.b.clientHeight && bounding.width * 2 < ClipWall.g.b.clientWidth) {
+                    if (bounding.height * 2 < ClipWall.u.height(ClipWall.g.b) && bounding.width * 2 < ClipWall.u.width(ClipWall.g.b)) {
                         return sel.getRangeAt(0).toString();
                     }
                 }
             } else if (ClipWall.g.d.selection.createRange) {
                 var tr = ClipWall.g.d.selection.createRange();
-                if (tr.boundingHeight * 2 < ClipWall.g.b.clientHeight && tr.boundingWidth * 2 < ClipWall.g.b.clientWidth) {
+                if (tr.boundingHeight * 2 < ClipWall.u.height(ClipWall.g.b) && tr.boundingWidth * 2 < ClipWall.u.width(ClipWall.g.b)) {
                     return tr.text;
                 }
             }

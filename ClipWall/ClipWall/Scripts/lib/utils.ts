@@ -11,6 +11,15 @@ module ClipWall {
             return event;
         }
 
+        export function cord(e: Event) {
+            var event = <MouseEvent>(e || g.w.event);
+            if (event) {
+                return new Point(event.pageX, event.pageY);
+            }
+
+            return null;
+        }
+
         export function fullpath(rel: string): string {
             return g.h + rel;
         }
@@ -82,6 +91,14 @@ module ClipWall {
             //For Firefox This code will work
             else if (typeof target.style.MozUserSelect != "undefined")
                 target.style.MozUserSelect = disable ? "none" : null;
+        }
+
+        export function width(elem: HTMLElement): number {
+            return elem.offsetWidth | elem.clientWidth | elem.scrollWidth;
+        }
+
+        export function height(elem: HTMLElement): number {
+            return elem.offsetHeight | elem.clientHeight | elem.scrollHeight;
         }
     }
 }

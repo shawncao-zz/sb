@@ -281,6 +281,8 @@
     <Content Include="Images\clip\pick.png" />
     <Content Include="Images\clip\select.png" />
     <TypeScriptCompile Include="Scripts\clip\content.ts" />
+    <TypeScriptCompile Include="Scripts\lib\ajax.ts" />
+    <Content Include="Images\clip\submit.png" />
     <Content Include="Scripts\masonry.js" />
     <Content Include="Views\Index\Index.cshtml" />
     <TypeScriptCompile Include="Scripts\run.ts" />

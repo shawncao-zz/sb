@@ -239,6 +239,59 @@ else if (typeof target.style.MozUserSelect != "undefined")
             return elem.offsetHeight | elem.clientHeight | elem.scrollHeight;
         }
         u.height = height;
+
+        (function (AjaxMethod) {
+            AjaxMethod[AjaxMethod["GET"] = 0] = "GET";
+            AjaxMethod[AjaxMethod["POST"] = 1] = "POST";
+        })(u.AjaxMethod || (u.AjaxMethod = {}));
+        var AjaxMethod = u.AjaxMethod;
+
+        // data is a serialized json object
+        function ajax(url, method, data, success, fail) {
+            // in the server side, a serialized json object is expected from json parameter name
+            data = "json=" + data;
+
+            var req;
+            if (ClipWall.g.ie6) {
+                req = new ActiveXObject("Microsoft.XMLHTTP");
+            } else {
+                req = new XMLHttpRequest();
+            }
+
+            req.open(method == AjaxMethod.GET ? "GET" : "POST", url, true);
+            if (method == AjaxMethod.POST) {
+                //Send the proper header information along with the request
+                req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                req.setRequestHeader("Content-length", data.length.toString());
+                req.setRequestHeader("Connection", "close");
+            }
+
+            req.onreadystatechange = function () {
+                if (req !== null && 4 == req.readyState) {
+                    // due to a webkit issue on iPhone/ipad:
+                    // the request completed state will invoke the callback more than one time
+                    // we release this object to make sure it's only executed once.
+                    var status = req.status;
+                    var content = req.responseText;
+                    req = null;
+
+                    if (200 == status) {
+                        if (content && success) {
+                            success(content);
+                        }
+                    } else if (fail) {
+                        fail(status);
+                    }
+                }
+            };
+
+            if (method == AjaxMethod.GET) {
+                req.send();
+            } else {
+                req.send("json=" + data);
+            }
+        }
+        u.ajax = ajax;
     })(ClipWall.u || (ClipWall.u = {}));
     var u = ClipWall.u;
 })(ClipWall || (ClipWall = {}));
@@ -406,7 +459,7 @@ var ClipWall;
             this.mIndex = 0;
             this.panel = ClipWall.g.ce('div');
             ClipWall.g.sat(this.panel, 'class', 'panel');
-            this.panel.innerHTML = "<div id='cnt' class='left'></div>" + "<div id='mnu' class='right'>" + "<ul>" + "<li class='b_expand' onclick='panel.mc(this);' />" + "<li class='b_pick' onclick='panel.mc(this);' />" + "<li class='b_select' onclick='panel.mc(this);' />" + "<li class='b_login' onclick='panel.mc(this);' />" + "</ul>" + "</div>";
+            this.panel.innerHTML = "<div id='cnt' class='left'></div>" + "<div id='mnu' class='right'>" + "<ul>" + "<li class='b_expand' />" + "<li class='b_pick' />" + "<li class='b_select' />" + "<li class='b_login' />" + "<li class='b_submit' />" + "</ul>" + "</div>";
 
             ClipWall.g.b.insertBefore(this.panel, ClipWall.g.b.firstChild);
 
@@ -459,6 +512,9 @@ var ClipWall;
                 case "b_login":
                     this.clickLogin();
                     break;
+                case "b_submit":
+                    this.clickSubmit();
+                    break;
             }
         };
 
@@ -488,6 +544,25 @@ var ClipWall;
         };
 
         Panel.prototype.clickLogin = function () {
+        };
+
+        // submit the data to server
+        Panel.prototype.clickSubmit = function () {
+            var cnt = ClipWall.g.ge("cnt");
+            var data = {
+                ID: "1",
+                URL: ClipWall.g.w.location.href,
+                SECTIONS: [],
+                IMAGES: [],
+                STYLE: null
+            };
+
+            var postUri = ClipWall.g.h + "post";
+            ClipWall.u.ajax(postUri, ClipWall.u.AjaxMethod.POST, JSON.stringify(data), function (res) {
+                alert(res);
+            }, function (fail) {
+                alert("fail status:" + fail);
+            });
         };
 
         Panel.prototype.getMode = function (name) {

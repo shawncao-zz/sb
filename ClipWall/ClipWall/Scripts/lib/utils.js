@@ -118,6 +118,59 @@ else if (typeof target.style.MozUserSelect != "undefined")
             return elem.offsetHeight | elem.clientHeight | elem.scrollHeight;
         }
         u.height = height;
+
+        (function (AjaxMethod) {
+            AjaxMethod[AjaxMethod["GET"] = 0] = "GET";
+            AjaxMethod[AjaxMethod["POST"] = 1] = "POST";
+        })(u.AjaxMethod || (u.AjaxMethod = {}));
+        var AjaxMethod = u.AjaxMethod;
+
+        // data is a serialized json object
+        function ajax(url, method, data, success, fail) {
+            // in the server side, a serialized json object is expected from json parameter name
+            data = "json=" + data;
+
+            var req;
+            if (ClipWall.g.ie6) {
+                req = new ActiveXObject("Microsoft.XMLHTTP");
+            } else {
+                req = new XMLHttpRequest();
+            }
+
+            req.open(method == AjaxMethod.GET ? "GET" : "POST", url, true);
+            if (method == AjaxMethod.POST) {
+                //Send the proper header information along with the request
+                req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                req.setRequestHeader("Content-length", data.length.toString());
+                req.setRequestHeader("Connection", "close");
+            }
+
+            req.onreadystatechange = function () {
+                if (req !== null && 4 == req.readyState) {
+                    // due to a webkit issue on iPhone/ipad:
+                    // the request completed state will invoke the callback more than one time
+                    // we release this object to make sure it's only executed once.
+                    var status = req.status;
+                    var content = req.responseText;
+                    req = null;
+
+                    if (200 == status) {
+                        if (content && success) {
+                            success(content);
+                        }
+                    } else if (fail) {
+                        fail(status);
+                    }
+                }
+            };
+
+            if (method == AjaxMethod.GET) {
+                req.send();
+            } else {
+                req.send("json=" + data);
+            }
+        }
+        u.ajax = ajax;
     })(ClipWall.u || (ClipWall.u = {}));
     var u = ClipWall.u;
 })(ClipWall || (ClipWall = {}));

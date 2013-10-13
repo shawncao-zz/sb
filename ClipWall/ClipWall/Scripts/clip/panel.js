@@ -9,7 +9,7 @@ var ClipWall;
             this.mIndex = 0;
             this.panel = ClipWall.g.ce('div');
             ClipWall.g.sat(this.panel, 'class', 'panel');
-            this.panel.innerHTML = "<div id='cnt' class='left'></div>" + "<div id='mnu' class='right'>" + "<ul>" + "<li class='b_expand' onclick='panel.mc(this);' />" + "<li class='b_pick' onclick='panel.mc(this);' />" + "<li class='b_select' onclick='panel.mc(this);' />" + "<li class='b_login' onclick='panel.mc(this);' />" + "</ul>" + "</div>";
+            this.panel.innerHTML = "<div id='cnt' class='left'></div>" + "<div id='mnu' class='right'>" + "<ul>" + "<li class='b_expand' />" + "<li class='b_pick' />" + "<li class='b_select' />" + "<li class='b_login' />" + "<li class='b_submit' />" + "</ul>" + "</div>";
 
             ClipWall.g.b.insertBefore(this.panel, ClipWall.g.b.firstChild);
 
@@ -62,6 +62,9 @@ var ClipWall;
                 case "b_login":
                     this.clickLogin();
                     break;
+                case "b_submit":
+                    this.clickSubmit();
+                    break;
             }
         };
 
@@ -91,6 +94,25 @@ var ClipWall;
         };
 
         Panel.prototype.clickLogin = function () {
+        };
+
+        // submit the data to server
+        Panel.prototype.clickSubmit = function () {
+            var cnt = ClipWall.g.ge("cnt");
+            var data = {
+                ID: "1",
+                URL: ClipWall.g.w.location.href,
+                SECTIONS: [],
+                IMAGES: [],
+                STYLE: null
+            };
+
+            var postUri = ClipWall.g.h + "post";
+            ClipWall.u.ajax(postUri, ClipWall.u.AjaxMethod.POST, JSON.stringify(data), function (res) {
+                alert(res);
+            }, function (fail) {
+                alert("fail status:" + fail);
+            });
         };
 
         Panel.prototype.getMode = function (name) {
